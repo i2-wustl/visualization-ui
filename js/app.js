@@ -36,11 +36,15 @@ class AppMediator {
         this.data = {
             patients: [],
             filtered_patients: [],
-            hospitals: [],
             timeline_events: [],
+            static_medical_facilities: [],
+            dynamic_medical_facilities: [],
+            filtered_medical_facilities: [],
             map_events: [],
             filtered_map_events: []
         };
+
+        this.params = {};
         this.filters = {};
         this.visualization = {};
         this.drawing = null;
@@ -48,8 +52,8 @@ class AppMediator {
 
     init = async () => {
         this.data = await data.init();
+        this.params = await params.init();
         this.filters = filters.init();
-       
 
         this.visualization = visualization.init();
         this.drawing = new DrawingFeature();

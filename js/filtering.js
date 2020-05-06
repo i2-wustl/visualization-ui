@@ -26,7 +26,7 @@ const filters = {
     },
     apply: () => {
         // Filter by map events by date
-        App.data.filtered_map_events = App.data.map_events.filter(d => d.Date <= App.filters.date);
+        App.data.filtered_dynamic_medical_facilities = App.data.dynamic_medical_facilities.filter(d => d.Date <= App.filters.date);
 
 
         //Filter patients

@@ -4,8 +4,8 @@ const visualization = {
 
         initializeMap();
 
-        visualization.hospitals = new HospitalOverlay();
-        visualization.hospitals.init();
+        visualization.medicalFacilities = new MedicalFacilitiesOverlay();
+        visualization.medicalFacilities.init();
 
         visualization.mapEvents = new MapEventOverlay();
         visualization.mapEvents.init();
@@ -40,7 +40,7 @@ const visualization = {
         visualization.dotDensity.toggle(isActive);
         updateZorder();
     },
-   
+
     toggleScrollWheelZoomable: (isScrollWheelZoomable) => {
         isScrollWheelZoomable ? App.map.scrollWheelZoom.enable() : App.map.scrollWheelZoom.disable();
     }
@@ -111,7 +111,7 @@ function onPanComplete() {
 function onZoomComplete() {
     preprocessCoordinatesForZoom();
     visualization.dotDensity.onZoomComplete();
-    visualization.hospitals.onZoomComplete();
+    visualization.medicalFacilities.onZoomComplete();
     visualization.mapEvents.onZoomComplete();
     visualization.drawing.onZoomComplete();
     visualization.contours.refresh();
@@ -122,6 +122,7 @@ function onZoomComplete() {
 function onFilterChanged(sliderDragging = false) {
     filters.apply();
     visualization.dotDensity.onFilterChanged(sliderDragging);
+    visualization.medicalFacilities.onFilterChanged(sliderDragging);
     visualization.mapEvents.onFilterChanged(sliderDragging);
     visualization.contours.refresh();
     visualization.sidebar.refresh();
@@ -138,7 +139,7 @@ function onFilterChanged(sliderDragging = false) {
 function updateZorder() {
     visualization.dotDensity.raiseGroup();
     visualization.mapEvents.raiseGroup();
-    visualization.hospitals.raiseGroup();
+    visualization.medicalFacilities.raiseGroup();
     visualization.contours.raiseGroup();
 }
 
@@ -210,5 +211,5 @@ function projectPoint(x, y) {
 function preprocessCoordinatesForZoom() {
     visualization.dotDensity.onPreZoom();
     visualization.mapEvents.onPreZoom();
-    visualization.hospitals.onPreZoom();
+    visualization.medicalFacilities.onPreZoom();
 }

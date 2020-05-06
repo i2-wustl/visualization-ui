@@ -13,7 +13,9 @@ const cases = {
 };
 
 const svgGroups = {
-    HOSPITALS: "#hospitalGroup",
+    MEDICAL_FACILITIES: "#medicalFacilitiesGroup",
+    STATIC_MEDICAL_FACILITIES: "#staticMedicalFacilitiesGroup",
+    DYNAMIC_MEDICAL_FACILITIES: "#dynamicMedicalFacilitiesGroup",
     PATIENT_DOT_DENSITY: "#patientDotDensity",
     MAP_EVENTS: "#mapEventGroup",
     CONTOURS: "#contourGroup",
@@ -22,7 +24,7 @@ const svgGroups = {
 };
 
 const svgElements = {
-    HOSPITAL_CIRCLES: ".hospitalCircle",
+    MEDICAL_FACILITIES_CIRCLES: ".medicalFacilitiesCircle",
     PATIENT_CIRCLES: ".patientCircle",
     MAP_EVENT_CIRCLES: ".mapEventCircle",
     CONTOURS: ".contourPath",
