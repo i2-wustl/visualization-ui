@@ -5,12 +5,19 @@
 
 const filters = {
     init: () => {
-        return {
+        let initialFilters = {
             "date": d3.min(App.data.patients, d => d.ENC_DATE),
             "COVID19": d3.select("#COVID19-cb").property('checked'),
             "ILI": d3.select("#ILI-cb").property('checked'),
-            "cases": d3.select('input[name="cases"]:checked').node().value
+            "cases": d3.select('input[name="cases"]:checked').node().value,
+            "medicalFacilities": new Set()
         };
+
+        for (const key in App.params.medical_facilities) {
+            initialFilters.medicalFacilities.add(key);
+        }
+
+        return initialFilters;
     },
     toggleCOVID19: (isActive) => {
         App.filters.COVID19 = isActive;
@@ -24,10 +31,18 @@ const filters = {
         App.filters.cases = value;
         visualization.refresh();
     },
+    toggleMedicalFacilities: (type, isActive) => {
+        if (isActive) {
+            App.filters.medicalFacilities.add(type);
+        } else {
+            App.filters.medicalFacilities.delete(type);
+        }
+        visualization.refresh();
+    },
     apply: () => {
-        // Filter by map events by date
-        App.data.filtered_dynamic_medical_facilities = App.data.dynamic_medical_facilities.filter(d => d.Date <= App.filters.date);
-
+        // Filter by map events by date and type
+        App.data.filtered_medical_facilities = App.data.medical_facilities
+            .filter(d => (d.Date <= App.filters.date) && App.filters.medicalFacilities.has(d.Type));
 
         //Filter patients
         let patients = App.data.patients;

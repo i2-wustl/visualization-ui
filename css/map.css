@@ -335,7 +335,16 @@ input:checked + .slider:before {
     align-items: center;
 }
 
+.sidebar-section-menu-item {
+    font-size: 14px;
+    margin: 5px 0px;
+}
+
 .sidebar-section-menu-row input[type="radio"], input[type="checkbox"]{
+    margin: 0 5px 0 8px;
+}
+
+.sidebar-section-menu-item input[type="radio"], input[type="checkbox"]{
     margin: 0 5px 0 8px;
 }
 
