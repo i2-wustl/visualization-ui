@@ -9,6 +9,8 @@ const ui = {
 
 function initializeControls() {
 
+    createMedicalFacilityFilters();
+
     d3.select("#COVID19-cb").on("click", function () {
         filters.toggleCOVID19(d3.select(this).property('checked'));
     });
@@ -40,8 +42,36 @@ function initializeControls() {
         visualization.toggleContourOverlay(isActive);
     });
 
+}
 
+function createMedicalFacilityFilters() {
+    let facilityDiv = d3.select("#facility-filter");
+    facilityDiv.append("span").text("Medical Facilities:");
 
+    for (const key in App.params.medical_facilities) {
+        let rowDiv = facilityDiv.append("div").attr("class", "sidebar-section-menu-row")
+        let label = rowDiv .append("label").attr("class", "switch");
+
+        let input = label.append("input")
+            .attr("type", "checkbox")
+            .attr("id", key + "-cb")
+            .attr("name", key)
+            .attr("value", key)
+            .attr("checked", true);
+
+        let span = label.append("span")
+            .attr("class", "slider round")
+            .style("background-color", App.params.medical_facilities[key].fill);
+
+        input.on("change", function () {
+                if (d3.select(this).property('checked')) span.style("background-color", App.params.medical_facilities[key].fill);
+                else span.style("background-color", "#ccc");
+
+                filters.toggleMedicalFacilities(key, d3.select(this).property('checked'));
+            });
+
+        rowDiv.append("span").text(key);
+    }
 }
 
 function openControlPanel() {
