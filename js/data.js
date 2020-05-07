@@ -4,7 +4,7 @@ const data = {
 
 async function processData() {
     return Promise.all([
-        d3.tsv("data/COVID19_032720_06Apr2020_125828336197.tsv"), // patients
+        d3.tsv("data/Patients_COVID_FLU_Apr29.tsv"), // patients
         d3.csv("data/timeline-events.csv"), // timeline events
         d3.csv("data/medical_facilities.csv"), // testing sites
     ]).then(async (files) => {
@@ -20,14 +20,13 @@ async function processData() {
         });
 
         data.patients.forEach(function (p) {
-            p.ENC_DATE = new Date(p.ENC_DATE);
-            p.COVID19 = p.COVID19 === "TRUE";
+            p.SAMPLE_COLLECTION_DATE = new Date(p.SAMPLE_COLLECTION_DATE);
             // add uniform random number to lat/long if demo'ing so we don't show patient addresses;
             p.Latitude = Number(p.Latitude) + (Math.random() - 0.5) * 2e-2;
             p.Longitude = Number(p.Longitude) + (Math.random() - 0.5) * 2e-2;
         });
 
-        const startDate = d3.min(data.patients, d => d.ENC_DATE);
+        const startDate = d3.min(data.patients, d => d.SAMPLE_COLLECTION_DATE);
 
         data.timeline_events.forEach(function (e) {
             e.Date = new Date(e.Date)

@@ -10,13 +10,8 @@ const ui = {
 function initializeControls() {
 
     createMedicalFacilityFilters();
+    createPatientCohortFilters();
 
-    d3.select("#COVID19-cb").on("click", function () {
-        filters.toggleCOVID19(d3.select(this).property('checked'));
-    });
-    d3.select("#ILI-cb").on("click", function () {
-        filters.toggleILI(d3.select(this).property('checked'));
-    });
     d3.selectAll('input[name="cases"]').on("change", function () {
         filters.toggleCases(d3.select('input[name="cases"]:checked').node().value);
     });
@@ -42,6 +37,36 @@ function initializeControls() {
         visualization.toggleContourOverlay(isActive);
     });
 
+}
+
+function createPatientCohortFilters() {
+    let cohortDiv = d3.select("#patient-cohort-filter");
+    cohortDiv.append("span").text("Patient Cohorts:");
+
+    for (const key in App.params.patients) {
+        let rowDiv = cohortDiv.append("div").attr("class", "sidebar-section-menu-row")
+        let label = rowDiv .append("label").attr("class", "switch");
+
+        let input = label.append("input")
+            .attr("type", "checkbox")
+            .attr("id", key + "-cb")
+            .attr("name", key)
+            .attr("value", key)
+            .attr("checked", true);
+
+        let span = label.append("span")
+            .attr("class", "slider round")
+            .style("background-color", App.params.patients[key].fill);
+
+        input.on("change", function () {
+            if (d3.select(this).property('checked')) span.style("background-color", App.params.patients[key].fill);
+            else span.style("background-color", "#ccc");
+
+            filters.toggleCohort(key, d3.select(this).property('checked'));
+        });
+
+        rowDiv.append("span").text(key);
+    }
 }
 
 function createMedicalFacilityFilters() {
