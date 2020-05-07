@@ -20,7 +20,7 @@ class MedicalFacilitiesOverlay {
         });
 
         for (const key in App.params.medical_facilities) {
-            App.params.medical_facilities[key].radius = getCircleRadius(App.map.getZoom(), App.params.medical_facilities[key].initial_size);
+            App.params.medical_facilities[key].radius = getCircleRadius(App.map.getZoom(), App.params.medical_facilities[key].size);
         }
     };
 
