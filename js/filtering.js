@@ -61,7 +61,6 @@ const filters = {
             case cases.ACTIVE:
                 let activeThreshold = getDateAfterDays(App.filters.date, -14);
                 patients = patients.filter(d => d.SAMPLE_COLLECTION_DATE <= App.filters.date && d.SAMPLE_COLLECTION_DATE > activeThreshold);
-                console.log(patients)
                 break;
             default:
         }
