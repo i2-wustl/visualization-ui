@@ -175,8 +175,8 @@ function getDensityThresholds(points, cellSize) {
     // WARNING: empirical magic numbers
     let maxThreshold = Math.log2(maxCount);
     let maxLogThreshold = Math.floor(maxThreshold);
-    let logThresholds = Array.from(Array(1 + maxLogThreshold * 4).keys());
-    let thresholds = logThresholds.map(x => Math.pow(1.3, x) / 20);
+    let logThresholds = Array.from(Array(10 + maxLogThreshold * 4).keys());
+    let thresholds = logThresholds.map(x => Math.pow(1.25, x) / 20);
     thresholds.unshift(0.01);
 
     //console.log(maxThreshold, thresholds);
