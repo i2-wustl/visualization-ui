@@ -38,6 +38,10 @@ const filters = {
         }
         visualization.refresh();
     },
+    toggleCases: (value) => {
+        App.filters.cases = value;
+        visualization.refresh();
+    },
     apply: () => {
         // Filter by map events by date and type
         App.data.filtered_medical_facilities = App.data.medical_facilities
@@ -57,6 +61,7 @@ const filters = {
             case cases.ACTIVE:
                 let activeThreshold = getDateAfterDays(App.filters.date, -14);
                 patients = patients.filter(d => d.SAMPLE_COLLECTION_DATE <= App.filters.date && d.SAMPLE_COLLECTION_DATE > activeThreshold);
+                console.log(patients)
                 break;
             default:
         }
