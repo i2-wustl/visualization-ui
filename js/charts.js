@@ -7,7 +7,7 @@ class Charts {
     init = function() {
 
         var timeHist = this.tsHistogramChart()
-            .x("ENC_DATE");
+            .x("SAMPLE_COLLECTION_DATE");
 
         d3.select("#example")
             .append("div")

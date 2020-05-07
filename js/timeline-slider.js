@@ -1,7 +1,7 @@
 
 const timelineSlider = {
     init: () => {
-        const [startDate, endDate] = d3.extent(App.data.patients, d => d.ENC_DATE);
+        const [startDate, endDate] = d3.extent(App.data.patients, d => d.SAMPLE_COLLECTION_DATE);
 
         const formatDateIntoYear = d3.timeFormat("%m/%d/%y");
         const formatDate = d3.timeFormat("%B %d, %Y"); //%A,
