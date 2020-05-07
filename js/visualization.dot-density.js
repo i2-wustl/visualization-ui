@@ -33,17 +33,17 @@ class DotDensityOverlay {
             d.point = projectPoint(d.Latitude, d.Longitude);
         });
 
+        for (const key in App.params.patients) {
+            App.params.patients[key].radius = getCircleRadius(App.map.getZoom(), App.params.patients[key].size);
+        }
     };
 
     onZoomComplete = function () {
         /* update only the position and radius on zoom */
-        const radiusCOVID19 = getCircleRadius(App.map.getZoom(), initialRadiusValues.COVID19);
-        const radiusILI = getCircleRadius(App.map.getZoom(), initialRadiusValues.ILI);
-
         d3.select(svgGroups.PATIENT_DOT_DENSITY).selectAll(svgElements.PATIENT_CIRCLES)
             .attr("cx", d => d.point.x)
             .attr("cy", d => d.point.y)
-            .attr("r", d => d.COVID19 ? radiusCOVID19 : radiusILI);
+            .attr("r", d => App.params.patients[d.COHORT].radius);
 
     };
 
@@ -62,14 +62,9 @@ class DotDensityOverlay {
 
         const t = svg.transition().duration(sliderDragging ? 0 : 250);
 
-        const radiusCOVID19 = getCircleRadius(App.map.getZoom(), initialRadiusValues.COVID19);
-        const radiusILI = getCircleRadius(App.map.getZoom(), initialRadiusValues.ILI);
-
-        const patients = App.data.filtered_patients;
-
         if (this.__isActive) {
             patientDotDensityGroup.selectAll(svgElements.PATIENT_CIRCLES)
-                .data(patients, d => d.ID)
+                .data(App.data.filtered_patients, d => d.ID)
                 .join(
                     enter => enter
                         .append("circle")
@@ -77,14 +72,14 @@ class DotDensityOverlay {
                         .attr("cx", d => d.point.x)
                         .attr("cy", d => d.point.y)
                         .attr("r", 0)
-                        .attr("fill", d => d.COVID19 ? "#B92739" : "#fb9a99")
-                        .attr("fill-opacity", d => d.COVID19 ? "0.85" : "0.5"),
+                        .attr("fill",  d => App.params.patients[d.COHORT].fill)
+                        .attr("fill-opacity",  d => App.params.patients[d.COHORT]["fill-opacity"]),
                     update => update,
                     exit => exit.call(circles => circles.transition(t).remove()
                         .attr("r", 0))
                 )
                 .call(circles => circles.transition(t)
-                    .attr("r", d => d.COVID19 ? radiusCOVID19 : radiusILI));
+                    .attr("r",  d => App.params.patients[d.COHORT].radius));
 
         }
         else { // TODO: don't even bother doing this if the dot-density button wasn't clicked
@@ -174,7 +169,10 @@ class DotDensityOverlay {
 
     raiseGroup = function () {
         const patientDotDensityGroup = d3.select(svgGroups.PATIENT_DOT_DENSITY);
-        // make sure COVID patients are drawn on top of ILI because they're more important
-        patientDotDensityGroup.selectAll(svgElements.PATIENT_CIRCLES).filter(d => d.COVID19).raise();
+
+        // raise them in the order of the cohort's z-order
+        Object.values(App.params.patients).sort((a, b) => a["z-order"] - b["z-order"]).forEach( p => {
+            patientDotDensityGroup.selectAll(svgElements.PATIENT_CIRCLES).filter(d => d.COHORT == p.cohort).raise();
+        });
     }
 }
