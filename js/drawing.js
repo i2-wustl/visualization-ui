@@ -7,7 +7,7 @@ class DrawingFeature {
         let currentRegionID = 0;
         let startPoint;
         let drawMode = drawingMode.NONE;
-        let drawRegions = turf.featureCollection([]);
+        App.drawRegions = turf.featureCollection([]);
         let isDraggingOnDraw = false;
 
         //#region private functions
@@ -94,6 +94,7 @@ class DrawingFeature {
                 );
 
             App.visualization.dotDensity.onSelectionChangedCurrentRegion();
+            App.visualization.sidebar.refresh();
         }
 
         function finishBox() {
@@ -102,7 +103,7 @@ class DrawingFeature {
 
             App.visualization.dotDensity.onSelectionComplete();
 
-            drawRegions.features.push(App.drawCurrentRegion);
+            App.drawRegions.features.unshift(App.drawCurrentRegion);
             App.drawCurrentRegion = null;
 
             currentBox.each(function () { drawCompleteGroup.append(() => this); });
@@ -138,16 +139,17 @@ class DrawingFeature {
                 App.selected_patient_IDs = App.selected_patient_IDs;
 
                 //BUG!!! This does not work as intended
-                drawRegions.features = drawRegions.features.splice(drawRegions.features.indexOf(App.selectedRegion), 1);
+                App.drawRegions.features = App.drawRegions.features.splice(App.drawRegions.features.indexOf(App.selectedRegion), 1);
                 App.selectedRegion = null;
 
                 updateSelectedPatientIds();
+                App.visualization.sidebar.refresh();
             }
         }
 
         function updateSelectedPatientIds() {
             let selectedIDs = new Set();
-            drawRegions.features.forEach(d => {
+            App.drawRegions.features.forEach(d => {
                 // find points within the polygon
                 let ptsWithin = turf.pointsWithinPolygon(App.data.filtered_patient_points, d);
                 // create set with selected IDs so we can use them to filter
