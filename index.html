@@ -68,14 +68,19 @@
             </div>
             <div class="sidebar-section-menu-item" id="facility-filter">
             </div>
-            <div class="sidebar-section-menu-row">
+            <div class="sidebar-section-menu-item">
                 <span>Cases:</span>
-                <input type="radio" id="total" name="cases" value="total" checked>
-                <label for="total">Total</label><br>
-                <input type="radio" id="active" name="cases" value="active">
-                <label for="active">Active</label><br>
-                <input type="radio" id="new" name="cases" value="new">
-                <label for="new">New</label>
+                <div class="sidebar-section-menu-row">
+                    <input type="radio" id="total" name="cases" value="total" checked>
+                    <label for="total">Total</label><br>
+                    <input type="radio" id="new" name="cases" value="new">
+                    <label for="new">New</label>
+                    <input type="radio" id="within-x-days" name="cases" value="within-x-days">
+                    <label for="within-x-days">Within</label>
+                    <input type="number" id="within-x-days-value" name="within-x-days-value" value="14" min="1" oninput="validity.valid||(value='');">
+                    <label for="within-x-days-value">Days</label>
+                </div>
+
             </div>
         </div>
     </div>

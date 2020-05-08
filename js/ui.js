@@ -16,6 +16,13 @@ function initializeControls() {
         filters.toggleCases(d3.select('input[name="cases"]:checked').node().value);
     });
 
+    d3.selectAll('input[name="within-x-days-value"]').on("change", function () {
+        const value = d3.select(this).node().value;
+        if (value !== "") {
+            filters.updateWithinXDays(d3.select(this).node().value);
+        }
+    });
+
     d3.select("#dot-density-btn").on("click", function () {
         let btn = d3.select(this);
         let isActive = !btn.classed("active");

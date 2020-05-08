@@ -7,6 +7,7 @@
 /* Enumerations */
 const cases = {
     TOTAL: "total",
+    WITHIN_X_DAYS: "within-x-days",
     ACTIVE: "active",
     RECOVERED: "recovered",
     NEW: "new"
