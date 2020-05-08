@@ -8,6 +8,7 @@ const filters = {
         let initialFilters = {
             "date": d3.min(App.data.patients, d => d.SAMPLE_COLLECTION_DATE),
             "cases": d3.select('input[name="cases"]:checked').node().value,
+            "withXDaysValue": d3.selectAll('input[name="within-x-days-value"]').node().value,
             "cohorts": new Set(),
             "medicalFacilities": new Set()
         };
@@ -42,6 +43,12 @@ const filters = {
         App.filters.cases = value;
         visualization.refresh();
     },
+    updateWithinXDays: (value) => {
+        App.filters.withXDaysValue = value;
+        if (App.filters.cases === cases.WITHIN_X_DAYS) {
+            visualization.refresh();
+        }
+    },
     apply: () => {
         // Filter by map events by date and type
         App.data.filtered_medical_facilities = App.data.medical_facilities
@@ -58,8 +65,8 @@ const filters = {
             case cases.NEW:
                 patients = patients.filter(d => datesAreOnSameDay(d.SAMPLE_COLLECTION_DATE, App.filters.date));
                 break;
-            case cases.ACTIVE:
-                let activeThreshold = getDateAfterDays(App.filters.date, -14);
+            case cases.WITHIN_X_DAYS:
+                let activeThreshold = getDateAfterDays(App.filters.date, -App.filters.withXDaysValue);
                 patients = patients.filter(d => d.SAMPLE_COLLECTION_DATE <= App.filters.date && d.SAMPLE_COLLECTION_DATE > activeThreshold);
                 break;
             default:

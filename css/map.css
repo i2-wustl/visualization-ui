@@ -15,6 +15,10 @@ button {
     outline:none;
 }
 
+input {
+    outline:none;
+}
+
 #map.drawing {
     cursor: crosshair;
     /*cursor: url("../img/pen.png") 0 16, auto;*/
@@ -391,6 +395,11 @@ input:checked + .slider:before {
 
 .sidebar-section-menu-tile-img.active {
     border: 3px solid #1f78b4;
+}
+
+#within-x-days-value {
+    width: 26px;
+    margin: 0px 4px;
 }
 
 #dot-density-btn {
