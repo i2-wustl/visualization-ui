@@ -8,36 +8,95 @@ class Charts {
 
         var timeHist = this.tsHistogramChart()
             .x("SAMPLE_COLLECTION_DATE");
+            .color("#888888");
 
-        d3.select("#example")
+        d3.select("#populationCharts")
+            .append("p")
+            .html("Population-Level Information")
+
+        d3.select("#populationCharts")
             .append("div")
-            .attr("id", "hist1")
+            .attr("id", "popHist1")
             .datum(App.data.filtered_patients)
             .call(timeHist);
 
         var ageHist = this.numericalHistogramChart()
-            .x("AGE");
+            .x("AGE")
+            .binSize(5)
+            .color("#888888");
 
-        d3.select("#example")
+        d3.select("#populationCharts")
             .append("div")
-            .attr("id", "hist2")
+            .attr("id", "popHist2")
             .datum(App.data.filtered_patients)
             .call(ageHist);
 
         var genderHist = this.categoricalHistogramChart()
-            .x("GENDER");
+            .x("GENDER")
+            .color("#888888");
 
-        d3.select("#example")
+        d3.select("#populationCharts")
             .append("div")
-            .attr("id", "hist3")
+            .attr("id", "popHist3")
             .datum(App.data.filtered_patients)
             .call(genderHist);
+
+        // get selected patients
+        if (App.drawCurrentRegion) {
+            let selected_patients = App.data.filtered_patients.filter(d => App.drawCurrentRegion.properties.patient_IDs.has(d.ID))
+
+            var ageHistCurrentRegion = this.numericalHistogramChart()
+                .color(App.drawCurrentRegion.properties.color)
+                .x("AGE")
+                .binSize(5);
+
+            var currentRegionAgeDiv = d3.select("#regionAgeCharts")
+                .append("div")
+                .attr("id", "age_hist_region_current")
+
+            currentRegionAgeDiv
+                .append("p")
+                .html("Last Selected Region Information")
+
+            currentRegionAgeDiv
+                .datum(selected_patients)
+                .call(ageHistCurrentRegion);
+        }
+
+        if (App.drawRegions) {
+            if (App.drawRegions.features.length > 0) {
+                d3.select("#regionAgeCharts")
+                        .append("p")
+                        .html((App.drawCurrentRegion ? "Other " : "") + "Regional Age Distributions")
+            }
+
+            App.drawRegions.features.forEach(region => {
+                let selected_patients = App.data.filtered_patients.filter(d => region.properties.patient_IDs.has(d.ID))
+
+                var ageHistDrawnRegion = this.numericalHistogramChart()
+                    .color(region.properties.color)
+                    .x("AGE")
+                    .binSize(5);
+
+                var regionAgeDiv = d3.select("#regionAgeCharts")
+                    .append("div")
+                    .attr("id", "age_hist_region_" + region.ID)
+
+                regionAgeDiv
+                    .datum(selected_patients)
+                    .call(ageHistDrawnRegion);
+            })
+        }
+
+
     }
 
     refresh = function() {
-        d3.select("#example")
-            .selectAll("div")
-            .remove()
+        d3.select("#populationCharts").html("")
+        d3.select("#regionTimeCharts").html("")
+        d3.select("#regionAgeCharts").html("")
+        d3.select("#regionRaceCharts").html("")
+        d3.select("#regionGenderCharts").html("")
 
         this.init();
     }
@@ -49,7 +108,8 @@ class Charts {
             xScale = d3.scaleTime(),
             yScale = d3.scaleLinear(),
             x,
-            y;
+            y,
+            color;
     
         function my(selection) {
             selection.each(function(data) {
@@ -97,7 +157,8 @@ class Charts {
                 var rects = bars.append("rect")
                     .attr("x", 1)
                     .attr("width", function(d) { return bins.length > 1 ? xScale(d.x1) - xScale(d.x0) - 1 : 2*xScale(d.x1); })
-                    .attr("height", function(d) { return height - yScale(d.length); });
+                    .attr("height", function(d) { return height - yScale(d.length); })
+                    .attr("fill", color);
     
                 gEnter.select(".x.axis")
                     .attr("transform", "translate(0," + height + ")")
@@ -125,7 +186,11 @@ class Charts {
         my.height = function (_){
             return arguments.length ? (height = _, my) : height;
         };
-    
+
+        my.color = function (_){
+            return arguments.length ? (color = _, my) : color;
+        }
+
         return my;
     }
     
@@ -136,8 +201,10 @@ class Charts {
             xScale = d3.scaleLinear(),
             yScale = d3.scaleLinear(),
             x,
-            y;
-    
+            y,
+            color,
+            binSize;
+
         function my(selection) {
             selection.each(function(data) {
                 if (data.length == 0) return;
@@ -156,9 +223,14 @@ class Charts {
     
                 gEnter.append("g").attr("class", "x axis");
                 gEnter.append("g").attr("class", "y axis");
-    
+
+                let extentData = d3.extent(data, function(d) {  return +d[x]; })
+                // nice-ify data
+                extentData[0] = Math.floor( extentData[0]/binSize)*binSize;
+                extentData[1] = Math.ceil( (extentData[1]+1)/binSize)*binSize;
+
                 xScale
-                    .domain(d3.extent(data, function(d) {  return +d[x]; }))
+                    .domain(extentData)
                     .rangeRound([0, width]);
         
                 var histogram = d3.histogram()
@@ -178,12 +250,13 @@ class Charts {
                     .data(bins)
                     .enter().append("g")
                     .attr("class", "bar")
-                    .attr("transform", function(d) { return "translate(" + xScale(d.x0) + "," + yScale(d.length) + ")"; });
+                    .attr("transform", function(d) { return "translate(" + (bins.length > 1 ? xScale(d.x0) : xScale(d.x0)/2) + "," + yScale(d.length) + ")"; });
     
                 var rects = bars.append("rect")
                     .attr("x", 1)
-                    .attr("width", function(d) { return xScale(d.x1) - xScale(d.x0) - 1; })
-                    .attr("height", function(d) { return height - yScale(d.length); });
+                    .attr("width", function(d) { return getBinWidth(bins.length, d.x0, d.x1, xScale, d); })
+                    .attr("height", function(d) { return height - yScale(d.length); })
+                    .attr("fill", color);
     
                 gEnter.select(".x.axis")
                     .attr("transform", "translate(0," + height + ")")
@@ -195,7 +268,21 @@ class Charts {
                 bars.exit().remove();
             });
         }
-    
+
+        function getBinWidth(numBins, x0, x1, xScale, d) {
+            if (numBins > 1) {
+                if (x0 === x1) { // should be an empty last bin
+                    // shouldn't need this or even to pass in "d", but I'm not certain, so leave this just in case.
+                    if (d.length > 0) console.log("WARNING! Histogram bar with 0 width has", d.length, "entries!");
+                    return 0;
+                } else { // normal case
+                    return xScale(x1) - xScale(x0) - 1;
+                }
+            } else { // just 1 bin. give it's full width and we'll translate it to the center
+                return xScale(x1);
+            }
+        }
+
         my.x = function (_){
             return arguments.length ? (x = _, my) : x;
         };
@@ -211,7 +298,15 @@ class Charts {
         my.height = function (_){
             return arguments.length ? (height = _, my) : height;
         };
-    
+
+        my.color = function (_){
+            return arguments.length ? (color = _, my) : color;
+        };
+
+        my.binSize = function (_){
+            return arguments.length ? (binSize = _, my) : binSize;
+        };
+
         return my;
     }
 
@@ -222,7 +317,8 @@ class Charts {
             xScale = d3.scaleBand(),
             yScale = d3.scaleLinear(),
             x,
-            y;
+            y,
+            color;
     
         function my(selection) {
             selection.each(function(data) {
@@ -280,7 +376,8 @@ class Charts {
                     // .attr("x", function(d) { return xScale(d.key); })
                     // .attr("x", function(d) { return xScale(d.key); })
                     .attr("width", function(d) { return xScale.bandwidth(); })
-                    .attr("height", function(d) { return height - yScale(d.value); });
+                    .attr("height", function(d) { return height - yScale(d.value); })
+                    .attr("fill", color);
     
                 gEnter.select(".x.axis")
                     .attr("transform", "translate(0," + height + ")")
@@ -308,7 +405,11 @@ class Charts {
         my.height = function (_){
             return arguments.length ? (height = _, my) : height;
         };
-    
+
+        my.color = function (_){
+            return arguments.length ? (color = _, my) : color;
+        }
+
         return my;
     }
 }
