@@ -193,6 +193,32 @@ function getRandomColor() {
     return color;
 }
 
+function getNextColor(init_chroma, init_luminance, initial_hue, num_divisions, i) {
+    const cycle = Math.floor(i / num_divisions);
+    const step = i % num_divisions;
+    const huePerStep = 360.0 / num_divisions;
+
+    let hueOffsetForCycleGroup = 0, distBetweenOffsets = 0, cycleInGroup = 0;
+    if (cycle > 0 ) {
+        const group = Math.floor(Math.log2(cycle))+1;
+        const groupSquared = Math.pow(2, group);
+        hueOffsetForCycleGroup = huePerStep / groupSquared;
+        distBetweenOffsets = hueOffsetForCycleGroup * 2;
+        cycleInGroup = cycle - Math.pow(2, group-1);
+    }
+
+    const firstHueInCycle = hueOffsetForCycleGroup + (distBetweenOffsets * cycleInGroup);
+
+    const hue = initial_hue + firstHueInCycle + (huePerStep * step);
+
+    const clCycle = (cycle % 5);
+
+    return chroma({ l:(init_luminance-(clCycle*(0.05)))*100, c:(init_chroma-(clCycle*(0.05)))*100, h:hue });
+    //return chroma({ l:lightness*100, c:saturation*100, h:hue });
+    //return d3.hsl(hue, saturation, lightness)
+}
+
+
 
 /********************************************************************************
  ********************************** Utility - Map *******************************
