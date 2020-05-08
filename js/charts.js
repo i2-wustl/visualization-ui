@@ -7,7 +7,7 @@ class Charts {
     init = function() {
 
         var timeHist = this.tsHistogramChart()
-            .x("SAMPLE_COLLECTION_DATE");
+            .x("SAMPLE_COLLECTION_DATE")
             .color("#888888");
 
         d3.select("#populationCharts")
@@ -108,7 +108,8 @@ class Charts {
             xScale = d3.scaleTime(),
             yScale = d3.scaleLinear(),
             x,
-            y;
+            y,
+            color;
     
         function my(selection) {
             selection.each(function(data) {
