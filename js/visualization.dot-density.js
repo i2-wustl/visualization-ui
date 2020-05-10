@@ -101,7 +101,6 @@ class DotDensityOverlay {
     updateSelectionsOnFilterChanged = function () {
         const patientDotDensityGroup = d3.select(svgGroups.PATIENT_DOT_DENSITY);
 
-        App.selected_patient_IDs.clear();
         // App.drawRegions.features.forEach(d => {
         //     // find points within the polygon
         //     let ptsWithin = turf.pointsWithinPolygon(App.data.filtered_patient_points, d);
