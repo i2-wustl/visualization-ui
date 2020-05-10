@@ -267,6 +267,7 @@ input:checked + .slider:before {
 
 .track,
 .track-inset,
+.track-progress,
 .track-overlay {
     stroke-linecap: round;
 }
@@ -279,6 +280,11 @@ input:checked + .slider:before {
 
 .track-inset {
     stroke: #dcdcdc;
+    stroke-width: 6px;
+}
+
+.track-progress {
+    stroke: #999999;
     stroke-width: 6px;
 }
 
