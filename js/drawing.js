@@ -148,8 +148,10 @@ class DrawingFeature {
         }
 
         function updateSelectedPatientIds() {
-            let selectedIDs = new Set();
+            App.selected_patient_IDs.clear();
+
             App.drawRegions.features.forEach(d => {
+                let selectedIDs = new Set();
                 // find points within the polygon
                 let ptsWithin = turf.pointsWithinPolygon(App.data.filtered_patient_points, d);
                 // create set with selected IDs so we can use them to filter
@@ -159,10 +161,9 @@ class DrawingFeature {
                 d.properties.patient_IDs = selectedIDs;
                 d.properties.selected_patient_IDs = selectedIDs;
                 // merge selected IDs with those from other regions
+                App.selected_patient_IDs = new Set([...App.selected_patient_IDs, ...selectedIDs]);
 
             });
-
-            App.selected_patient_IDs = new Set([...App.selected_patient_IDs, ...selectedIDs]);
 
         }
 
