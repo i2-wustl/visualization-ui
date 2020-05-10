@@ -10,7 +10,8 @@ function datesAreOnSameDay(first, second) {
 }
 
 function getDateAfterDays(currentDate, days) {
-    return new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + days);
+    return new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + days,
+        currentDate.getHours(), currentDate.getMinutes(), currentDate.getSeconds(), currentDate.getMilliseconds());
 }
 
 function daysBetween(startDate, endDate) {

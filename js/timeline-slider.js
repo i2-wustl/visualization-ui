@@ -14,7 +14,7 @@ const timelineSlider = {
             .append("svg")
             .attr("width", "320px")
             .attr("height", height);
-
+        
         let moving = false;
         let currentValue = 0;
         const targetValue = width;
@@ -53,13 +53,16 @@ const timelineSlider = {
             .text(formatDate(startDate))
             .attr("transform", "translate(0," + (-10) + ")");
 
-        slider.append("line")
+        const trackProgress = slider.append("line")
             .attr("class", "track")
             .attr("x1", x.range()[0])
             .attr("x2", x.range()[1])
             .select(function () { return this.parentNode.appendChild(this.cloneNode(true)); })
             .attr("class", "track-inset")
             .select(function () { return this.parentNode.appendChild(this.cloneNode(true)); })
+            .attr("class", "track-progress");
+
+        trackProgress.select(function () { return this.parentNode.appendChild(this.cloneNode(true)); })
             .attr("class", "track-overlay")
             .call(d3.drag()
                 .on("start.interrupt", function () {
@@ -72,6 +75,8 @@ const timelineSlider = {
                     dateSliderUpdate(x.invert(currentValue), true);
                 })
             );
+
+        trackProgress.attr("x2", x.range()[0]);
 
         const eventLabel = slider.append("text")
             .attr("class", "timeline-event-label")
@@ -121,7 +126,27 @@ const timelineSlider = {
 
         function dateSliderUpdate(h, dragging = false) {
             // update position of slider
-            handle.attr("cx", x(h));
+            let xPos = x(h), xStartPos;
+            handle.attr("cx", xPos);
+
+            switch (App.filters.cases) {
+                case cases.TOTAL:
+                    xStartPos = 0;
+                    break;
+                case cases.NEW:
+                    xStartPos = xPos;
+                    break;
+                case cases.WITHIN_X_DAYS:
+                    let activeThreshold = getDateAfterDays(h, -App.filters.withXDaysValue)
+                    xStartPos = x(activeThreshold);
+                    break;
+                default:
+            }
+            trackProgress.attr("x1", xStartPos).attr("x2", xPos);
+                //.call(lines => lines.transition(t)
+                //    .attr("x1", xStartPos)
+                //    .attr("x2", xPos));
+
 
             // update text of slider
             let oldDate = App.filters.date;
