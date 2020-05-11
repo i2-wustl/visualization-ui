@@ -115,6 +115,7 @@ class DrawingFeature {
 
             App.drawRegions = turf.featureCollection([]);
             App.selected_patient_IDs.clear();
+            App.visualization.sidebar.refresh();
             App.visualization.drawing.refresh();
             App.visualization.dotDensity.refreshSelections();
         }
