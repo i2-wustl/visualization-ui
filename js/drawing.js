@@ -241,6 +241,17 @@ class DrawingFeature {
             //deleteSelectedBoxes();
         });
 
+        // TODO this is a terrible way to do this. We need a way to register event handlers with the app so
+        // different parts can listen to the same event.
+        d3.select("body").on("keydown", function() {
+            if (App.selectedRegion) {
+                if( d3.event.keyCode === 8 || d3.event.keyCode === 46 ) {
+                    deleteSelectedBoxes();
+                }
+
+            }
+        });
+
         //#endregion
 
 
