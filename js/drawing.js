@@ -114,7 +114,7 @@ class DrawingFeature {
         function deleteAllBoxes() {
 
             App.drawRegions = turf.featureCollection([]);
-            updateSelectedPatientIds();
+            App.selected_patient_IDs.clear();
             App.visualization.drawing.refresh();
             App.visualization.dotDensity.refreshSelections();
         }
@@ -149,7 +149,6 @@ class DrawingFeature {
                 // merge selected IDs with those from other regions
 
             });
-
             App.selected_patient_IDs = new Set([...App.selected_patient_IDs, ...selectedIDs]);
 
         }
@@ -236,7 +235,8 @@ class DrawingFeature {
         });
 
         d3.select("#clear-poly-btn").on("click", function () {
-            deleteSelectedBoxes();
+            deleteAllBoxes();
+            //deleteSelectedBoxes();
         });
 
         //#endregion
