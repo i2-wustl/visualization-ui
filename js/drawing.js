@@ -57,11 +57,11 @@ class DrawingFeature {
             // need at least 4 points for a path. Essentially a triangle that ends at itself
             // but we can use the same point 4x
             App.drawCurrentRegion = turf.polygon([Array(4).fill([point.lng, point.lat])]);
-            App.drawCurrentRegion.properties.ID = currentRegionID++;
+            App.drawCurrentRegion.properties.ID = ++currentRegionID;
             App.drawCurrentRegion.properties.color = getRandomColor();
 
             drawGroup.selectAll(svgElements.DRAWING_PATHS)
-                .data([App.drawCurrentRegion])
+                .data([App.drawCurrentRegion], d => d.properties.ID)
                 .enter()
                 .append("path")
                 .attr("class", svgElements.DRAWING_PATHS.substr(1))
@@ -85,7 +85,7 @@ class DrawingFeature {
             App.drawCurrentRegion.properties.color = tempColor;
 
             drawGroup.selectAll(svgElements.DRAWING_PATHS)
-                .data([App.drawCurrentRegion])
+                .data([App.drawCurrentRegion], d => d.properties.ID)
                 .join(
                     enter => enter,
                     update => update
@@ -112,38 +112,26 @@ class DrawingFeature {
         }
 
         function deleteAllBoxes() {
-            let currentBoxes = d3.select(svgGroups.DRAWING_COMPLETE).selectAll(svgElements.DRAWING_PATHS);
 
-            currentBoxes._groups.forEach(group => {
-                group.forEach(element => element.remove());
-            });
+            App.drawRegions = turf.featureCollection([]);
+            updateSelectedPatientIds();
+            App.visualization.drawing.refresh();
+            App.visualization.dotDensity.refreshSelections();
         }
 
         function deleteSelectedBoxes() {
-            console.debug('Delete Selected Region');
-
             if (App.selectedRegion) {
-                let selectedPath = d3.select(svgGroups.DRAWING_COMPLETE).selectAll(svgElements.DRAWING_PATHS).filter(path => {
-                    console.log('path', path);
-                    return path.properties.ID == App.selectedRegion.properties.ID;
-                });
-
-                selectedPath._groups.forEach(group => {
-                    group.forEach(element => element.remove());
-                });
-
-
                 App.selectedRegion.properties.patient_IDs.forEach(d => {
                     App.selected_patient_IDs.delete(d);
                 });
-                App.selected_patient_IDs = App.selected_patient_IDs;
 
-                //BUG!!! This does not work as intended
-                App.drawRegions.features = App.drawRegions.features.splice(App.drawRegions.features.indexOf(App.selectedRegion), 1);
+                App.drawRegions.features.splice(App.drawRegions.features.indexOf(App.selectedRegion), 1);
                 App.selectedRegion = null;
 
                 updateSelectedPatientIds();
                 App.visualization.sidebar.refresh();
+                App.visualization.drawing.refresh();
+                App.visualization.dotDensity.refreshSelections();
             }
         }
 
@@ -217,7 +205,7 @@ class DrawingFeature {
                 console.warn('map not initialized');
             }
 
-        }
+        };
 
 
 
