@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Covid-19 Missouri and Illinois</title>
 
     <!-- d3 -->
@@ -10,12 +10,16 @@
     <script src="https://d3js.org/topojson.v1.min.js"></script>
 
     <!-- leaflet -->
-    <link rel="stylesheet" href="https://d19vzq90twjlae.cloudfront.net/leaflet-0.7/leaflet.css"/>
+    <link
+      rel="stylesheet"
+      href="https://d19vzq90twjlae.cloudfront.net/leaflet-0.7/leaflet.css"
+    />
     <script src="https://d19vzq90twjlae.cloudfront.net/leaflet-0.7/leaflet.js"></script>
 
     <!-- turf -->
     <script src="https://cdn.jsdelivr.net/npm/@turf/turf@5/turf.min.js"></script>
-    <!--<script src="../ext/turf.js"></script>--> <!-- for performance profiling -->
+    <!--<script src="../ext/turf.js"></script>-->
+    <!-- for performance profiling -->
 
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
@@ -39,157 +43,221 @@
     <script src="js/drawing.js"></script>
     <script src="js/charts.js"></script>
     <script src="js/app.js"></script>
-    <link rel="stylesheet" href="css/map.css"/>
-
-</head>
-<body>
-
-<div class="hamburger-container-left">
-    <button class="hamburger" onclick="openControlPanel()"></button>
-</div>
-
-<div class="hamburger-container-right">
-    <button class="hamburger" onclick="openChartPanel()"></button>
-</div>
-
-
-
-
-
-<div id="control-sidebar" class="sidebar">
-    <div class="sidebar-header">
-        <button class="collapse-left" onclick="closeControlPanel()"></button>
+    <link rel="stylesheet" href="css/map.css" />
+  </head>
+  <body>
+    <div class="hamburger-container-left">
+      <button class="hamburger" onclick="openControlPanel()"></button>
     </div>
-    <!-- Filters -->
-    <div class="sidebar-section">
+
+    <div class="hamburger-container-right">
+      <button class="hamburger" onclick="openChartPanel()"></button>
+    </div>
+
+    <div id="control-sidebar" class="sidebar">
+      <div class="sidebar-header">
+        <button class="collapse-left" onclick="closeControlPanel()"></button>
+      </div>
+      <!-- Filters -->
+      <div class="sidebar-section">
         <div class="sidebar-section-header">Filters</div>
         <div class="sidebar-section-menu">
-            <div class="sidebar-section-menu-item" id="patient-cohort-filter">
+          <div
+            class="sidebar-section-menu-item"
+            id="patient-cohort-filter"
+          ></div>
+          <div class="sidebar-section-menu-item" id="facility-filter"></div>
+          <div class="sidebar-section-menu-item">
+            <span>Cases:</span>
+            <div class="sidebar-section-menu-row">
+              <input
+                type="radio"
+                id="total"
+                name="cases"
+                value="total"
+                checked
+              />
+              <label for="total">Total</label><br />
+              <input type="radio" id="new" name="cases" value="new" />
+              <label for="new">New</label>
+              <input
+                type="radio"
+                id="within-x-days"
+                name="cases"
+                value="within-x-days"
+              />
+              <label for="within-x-days">Within</label>
+              <input
+                type="number"
+                id="within-x-days-value"
+                name="within-x-days-value"
+                value="14"
+                min="1"
+                oninput="validity.valid||(value='');"
+              />
+              <label for="within-x-days-value">Days</label>
             </div>
-            <div class="sidebar-section-menu-item" id="facility-filter">
-            </div>
-            <div class="sidebar-section-menu-item">
-                <span>Cases:</span>
-                <div class="sidebar-section-menu-row">
-                    <input type="radio" id="total" name="cases" value="total" checked>
-                    <label for="total">Total</label><br>
-                    <input type="radio" id="new" name="cases" value="new">
-                    <label for="new">New</label>
-                    <input type="radio" id="within-x-days" name="cases" value="within-x-days">
-                    <label for="within-x-days">Within</label>
-                    <input type="number" id="within-x-days-value" name="within-x-days-value" value="14" min="1" oninput="validity.valid||(value='');">
-                    <label for="within-x-days-value">Days</label>
-                </div>
-
-            </div>
+          </div>
         </div>
-    </div>
-    <!-- Patient Overlays -->
-    <div class="sidebar-section">
+      </div>
+      <!-- Patient Overlays -->
+      <div class="sidebar-section">
         <div class="sidebar-section-header">Patient Overlays</div>
         <div class="sidebar-section-menu-row">
-            <div class="sidebar-section-menu-tile">
-                <div id="dot-density-btn" class="sidebar-section-menu-tile-img active"></div>
-                <span>Dot-density</span>
-            </div>
-            <div class="sidebar-section-menu-tile">
-                <div id="twod-density-btn" class="sidebar-section-menu-tile-img"></div>
-                <span>2D-density</span>
-            </div>
-            <div class="sidebar-section-menu-tile">
-                <div id="contours-btn" class="sidebar-section-menu-tile-img"></div>
-                <span>Contours</span>
-            </div>
+          <div class="sidebar-section-menu-tile">
+            <div
+              id="dot-density-btn"
+              class="sidebar-section-menu-tile-img active"
+            ></div>
+            <span>Dot-density</span>
+          </div>
+          <div class="sidebar-section-menu-tile">
+            <div
+              id="twod-density-btn"
+              class="sidebar-section-menu-tile-img"
+            ></div>
+            <span>2D-density</span>
+          </div>
+          <div class="sidebar-section-menu-tile">
+            <div id="contours-btn" class="sidebar-section-menu-tile-img"></div>
+            <span>Contours</span>
+          </div>
         </div>
-    </div>
-    <!-- Demographic Overlays -->
-    <div class="sidebar-section">
+      </div>
+      <!-- Demographic Overlays -->
+      <div class="sidebar-section">
         <div class="sidebar-section-header">Demographic Overlays</div>
         <div class="sidebar-section-menu-row">
-            <div class="sidebar-section-menu-tile">
-                <div id="population-btn" class="sidebar-section-menu-tile-img"></div>
-                <span>Population Density</span>
-            </div>
-            <div class="sidebar-section-menu-tile">
-                <div id="income-btn" class="sidebar-section-menu-tile-img"></div>
-                <span>Average Income</span>
-            </div>
+          <div class="sidebar-section-menu-tile">
+            <div
+              id="population-btn"
+              class="sidebar-section-menu-tile-img"
+            ></div>
+            <span>Population Density</span>
+          </div>
+          <div class="sidebar-section-menu-tile">
+            <div id="income-btn" class="sidebar-section-menu-tile-img"></div>
+            <span>Average Income</span>
+          </div>
         </div>
-    </div>
-    <!-- Analysis Overlays -->
-    <div class="sidebar-section">
+      </div>
+      <!-- Analysis Overlays -->
+      <div class="sidebar-section">
         <div class="sidebar-section-header">Analysis Overlays</div>
         <div class="sidebar-section-menu-row">
-            <div class="sidebar-section-menu-tile">
-                <div id="hotspot-btn" class="sidebar-section-menu-tile-img"></div>
-                <span>Hotspot Prediction</span>
-            </div>
+          <div class="sidebar-section-menu-tile">
+            <div id="hotspot-btn" class="sidebar-section-menu-tile-img"></div>
+            <span>Hotspot Prediction</span>
+          </div>
         </div>
-    </div>
-    <!-- Drawing controls -->
-    <div class="sidebar-section">
+      </div>
+      <!-- Drawing controls -->
+      <div class="sidebar-section">
         <div class="sidebar-section-header">Drawing</div>
         <div class="sidebar-section-menu-row">
-            <div class="sidebar-section-menu-tile">
-                <div id="draw-box-btn" class="sidebar-section-menu-tile-img"></div>
-                <span>Draw Box</span>
-            </div>
-            <div class="sidebar-section-menu-tile">
-                <div id="select-region-btn" class="sidebar-section-menu-tile-img"></div>
-                <span>Select Region</span>
-            </div>
-            <div class="sidebar-section-menu-tile">
-                <div id="clear-poly-btn" class="sidebar-section-menu-tile-img"></div>
-                <span>Clear Regions</span>
-            </div>
+          <div class="sidebar-section-menu-tile">
+            <div id="draw-box-btn" class="sidebar-section-menu-tile-img"></div>
+            <span>Draw Box</span>
+          </div>
+          <div class="sidebar-section-menu-tile">
+            <div
+              id="select-region-btn"
+              class="sidebar-section-menu-tile-img"
+            ></div>
+            <span>Select Region</span>
+          </div>
+          <div class="sidebar-section-menu-tile">
+            <div
+              id="clear-poly-btn"
+              class="sidebar-section-menu-tile-img"
+            ></div>
+            <span>Clear Regions</span>
+          </div>
         </div>
+      </div>
     </div>
-</div>
 
-
-
-<div id="chart-sidebar" class="sidebar">
-    <div class="sidebar-header">
+    <div id="chart-sidebar" class="sidebar">
+      <div class="sidebar-header">
         <button class="collapse-right" onclick="closeChartPanel()"></button>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-section-menu-row">
+          <div id="populationCharts" class="chart-container"></div>
+        </div>
+        <div class="sidebar-section-menu-row">
+          <div id="regionTimeCharts" class="chart-container"></div>
+        </div>
+        <div class="sidebar-section-menu-row">
+          <div id="regionAgeCharts" class="chart-container"></div>
+        </div>
+        <div class="sidebar-section-menu-row">
+          <div id="regionRaceCharts" class="chart-container"></div>
+        </div>
+        <div class="sidebar-section-menu-row">
+          <div id="regionGenderCharts" class="chart-container"></div>
+        </div>
+      </div>
     </div>
-    <div class="sidebar-section">
-        <div class="sidebar-section-menu-row">
-            <div id="populationCharts" class="chart-container"></div>
-        </div>
-        <div class="sidebar-section-menu-row">
-            <div id="regionTimeCharts" class="chart-container"></div>
-        </div>
-        <div class="sidebar-section-menu-row">
-            <div id="regionAgeCharts" class="chart-container"></div>
-        </div>
-        <div class="sidebar-section-menu-row">
-            <div id="regionRaceCharts" class="chart-container"></div>
-        </div>
-        <div class="sidebar-section-menu-row">
-            <div id="regionGenderCharts" class="chart-container"></div>
-        </div>
-    </div>
-</div>
 
-
-
-
-<div id="timeline">
-    <div id="timeline-container">
+    <div id="timeline">
+      <div id="timeline-container">
         <button id="timeline-expand"></button>
         <div id="timeline-control-small">
-            <div id="timeline-svg-small">
-                <div id="vis"></div>
-            </div>
+          <div id="timeline-svg-small">
+            <div id="vis"></div>
+          </div>
         </div>
         <button id="timeline-play" class="not-playing"></button>
+      </div>
     </div>
-</div>
 
+    <div id="map"></div>
 
+    <script>
+      $(document).ready(() => {
+        const app = new AppMediator();
 
+        window.App = app;
 
-<div id="map"></div>
-
-</body>
+        app.init({
+          overlays: {
+            medical_facilities: [
+              {
+                type: "Hospital",
+                size: 14,
+                fill: "#1f78b4",
+              },
+              {
+                type: "Drive-thru",
+                size: 14,
+                fill: "#a6cee3",
+              },
+              {
+                type: "Testing site",
+                size: 14,
+                fill: "#a6cee3",
+              }
+            ],
+            patients: [
+              {
+                cohort: "COVID-19+",
+                size: 9,
+                fill: "#B92739",
+                "fill-opacity": 0.75,
+                "z-order": 2,
+              },
+              {
+                cohort: "Influenza+",
+                size: 9,
+                fill: "#fb9a99",
+                "fill-opacity": 0.5,
+                "z-order": 1,
+              }
+            ]
+          }
+        });
+      });
+    </script>
+  </body>
 </html>

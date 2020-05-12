@@ -4,9 +4,9 @@ const data = {
 
 async function processData() {
     return Promise.all([
-        d3.tsv("data/Patients_COVID_FLU_Apr29.tsv"), // patients
+        d3.tsv("data/patients.tsv"), // patients
         d3.csv("data/timeline-events.csv"), // timeline events
-        d3.csv("data/medical_facilities.csv"), // testing sites
+        d3.csv("data/medical-facilities.csv"), // testing sites
     ]).then(async (files) => {
 
         Object.assign(data, {
@@ -35,6 +35,18 @@ async function processData() {
         data.medical_facilities.forEach(function (e) {
             e.Date = e.Date === "" ? startDate : new Date(e.Date);
         });
+
+
+        //ToDo: create type and cohort overlay configurations with "random" settings for any missing from the configuration
+        
+        // sanity check on facility types.
+        let rowsWithMissingTypes = data.medical_facilities.filter(d => !Object.keys(App.params.medical_facilities).includes(d.Type));
+        rowsWithMissingTypes.forEach(d => console.error("Medical facility " + d.ID + " has an unregistered type. An entry for \"" + d.Type + "\" was not found in the overlay configuration."));
+
+        // sanity check on patient cohorts.
+        rowsWithMissingTypes = data.patients.filter(d => !Object.keys(App.params.patients).includes(d.COHORT));
+        rowsWithMissingTypes.forEach(d => console.error("Patient " + d.ID + " belongs to an unregistered cohort. An entry for \"" + d.COHORT + "\" was not found in the overlay configuration."));
+
 
         return data;
     });
