@@ -448,7 +448,7 @@ input:checked + .slider:before {
 }
 
 #free-draw-btn {
-    background: url("../img/free-draw-01.png") no-repeat top left;
+    background: url("../img/free-draw.png") no-repeat top left;
     background-size: contain;
     cursor: pointer;
 }
