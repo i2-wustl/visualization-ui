@@ -48,6 +48,7 @@ class AppMediator {
         this.filters = {};
         this.visualization = {};
         this.drawing = null;
+        this.zooming = false;
     }
 
     init = async () => {

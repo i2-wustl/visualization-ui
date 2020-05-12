@@ -12,7 +12,7 @@ class DrawingFeature {
 
         //#region private functions
         function onMouseDown(e) {
-            if (e.originalEvent.button === 2) return; // ignore right click
+            if (e.originalEvent.button === 2 || App.zooming) return; // ignore right click
 
             if (drawMode === drawingMode.BOX ||
                 drawMode === drawingMode.INSPECTION_BOX ||
@@ -45,7 +45,7 @@ class DrawingFeature {
         }
 
         function onMouseUp(e) {
-            if (e.originalEvent.button === 2) return; // ignore right click
+            if (e.originalEvent.button === 2 || App.zooming) return; // ignore right click
 
             if (isDraggingOnDraw)
                 if (drawMode === drawingMode.BOX ||
