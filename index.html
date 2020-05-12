@@ -10,10 +10,7 @@
     <script src="https://d3js.org/topojson.v1.min.js"></script>
 
     <!-- leaflet -->
-    <link
-      rel="stylesheet"
-      href="https://d19vzq90twjlae.cloudfront.net/leaflet-0.7/leaflet.css"
-    />
+    <link rel="stylesheet" href="https://d19vzq90twjlae.cloudfront.net/leaflet-0.7/leaflet.css"/>
     <script src="https://d19vzq90twjlae.cloudfront.net/leaflet-0.7/leaflet.js"></script>
 
     <!-- turf -->
@@ -62,10 +59,7 @@
       <div class="sidebar-section">
         <div class="sidebar-section-header">Filters</div>
         <div class="sidebar-section-menu">
-          <div
-            class="sidebar-section-menu-item"
-            id="patient-cohort-filter"
-          ></div>
+          <div class="sidebar-section-menu-item" id="patient-cohort-filter"></div>
           <div class="sidebar-section-menu-item" id="facility-filter"></div>
           <div class="sidebar-section-menu-item">
             <span>Cases:</span>
@@ -75,6 +69,7 @@
                 id="total"
                 name="cases"
                 value="total"
+                checked
               />
               <label for="total">Total</label><br />
               <input type="radio" id="new" name="cases" value="new"/>
@@ -105,17 +100,11 @@
         <div class="sidebar-section-header">Patient Overlays</div>
         <div class="sidebar-section-menu-row">
           <div class="sidebar-section-menu-tile">
-            <div
-              id="dot-density-btn"
-              class="sidebar-section-menu-tile-img active"
-            ></div>
+            <div id="dot-density-btn" class="sidebar-section-menu-tile-img active"></div>
             <span>Dot-density</span>
           </div>
           <div class="sidebar-section-menu-tile">
-            <div
-              id="twod-density-btn"
-              class="sidebar-section-menu-tile-img"
-            ></div>
+            <div id="twod-density-btn" class="sidebar-section-menu-tile-img"></div>
             <span>2D-density</span>
           </div>
           <div class="sidebar-section-menu-tile">
@@ -129,10 +118,7 @@
         <div class="sidebar-section-header">Demographic Overlays</div>
         <div class="sidebar-section-menu-row">
           <div class="sidebar-section-menu-tile">
-            <div
-              id="population-btn"
-              class="sidebar-section-menu-tile-img"
-            ></div>
+            <div id="population-btn" class="sidebar-section-menu-tile-img"></div>
             <span>Population Density</span>
           </div>
           <div class="sidebar-section-menu-tile">
@@ -155,26 +141,18 @@
       <div class="sidebar-section">
         <div class="sidebar-section-header">Drawing</div>
         <div class="sidebar-section-menu-row">
-            <div class="sidebar-section-menu-tile">
-                <div id="free-draw-btn" class="sidebar-section-menu-tile-img"></div>
-                <span>Free Draw</span>
-            </div>
-            <div class="sidebar-section-menu-tile">
-                <div id="draw-box-btn" class="sidebar-section-menu-tile-img"></div>
-                <span>Draw Box</span>
-            </div>
-            <div class="sidebar-section-menu-tile">
-                <div id="select-region-btn" class="sidebar-section-menu-tile-img"></div>
-                <span>Select Region</span>
-            </div>
-        </div>
-        <div class="sidebar-section-menu-row">
-            <div class="sidebar-section-menu-tile">
-                <div id="clear-poly-btn" class="sidebar-section-menu-tile-img"></div>
-                <span>Clear Regions</span>
-            </div>
-            <div class="sidebar-section-menu-tile" style="width:63px"></div>
-            <div class="sidebar-section-menu-tile" style="width:63px"></div>
+          <div class="sidebar-section-menu-tile">
+            <div id="draw-box-btn" class="sidebar-section-menu-tile-img"></div>
+            <span>Draw Box</span>
+          </div>
+          <div class="sidebar-section-menu-tile">
+            <div id="select-region-btn" class="sidebar-section-menu-tile-img"></div>
+            <span>Select Region</span>
+          </div>
+          <div class="sidebar-section-menu-tile">
+            <div id="clear-poly-btn" class="sidebar-section-menu-tile-img"></div>
+            <span>Clear Regions</span>
+          </div>
         </div>
       </div>
     </div>

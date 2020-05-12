@@ -70,7 +70,7 @@ function initializeMap() {
         zoomControl: false
     });
 
-    new L.Control.Zoom({ position: 'bottomright' }).addTo(App.map);
+    new L.Control.Zoom({ position: 'bottomleft'}).addTo(App.map);
 
     // map layer options
     const baseLayers = {
@@ -79,10 +79,12 @@ function initializeMap() {
         "Satellite": satellite
     };
 
-    L.control.layers(null, baseLayers, { position: 'bottomright' }).addTo(App.map);
+    L.control.layers(null, baseLayers, { position: 'bottomleft'}).addTo(App.map);
 
     // Initialize SVG layer
     App.map._initPathRoot();
+
+    d3.select(".leaflet-bottom.leaflet-right").style("z-index", 0);
 
     // use D3's custom geo transform method to implement the above
     const projection = d3.geoTransform({ point: projectPointLeaflet });

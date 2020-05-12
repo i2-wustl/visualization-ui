@@ -44,6 +44,7 @@ function initializeControls() {
         visualization.toggleContourOverlay(isActive);
     });
 
+    setupRightSidebarDraggable(document.getElementById("sidebar-draggable-right"));
 }
 
 function createPatientCohortFilters() {
@@ -122,3 +123,29 @@ function closeChartPanel() {
     document.getElementById("chart-sidebar").style.width = "0";
 }
 
+function setupRightSidebarDraggable(elmnt) {
+    elmnt.onmousedown = dragMouseDown;
+
+    function dragMouseDown(e) {
+        e = e || window.event;
+        e.preventDefault();
+        // get the mouse cursor position at startup:
+        document.onmouseup = closeDragElement;
+        // call a function whenever the cursor moves:
+        document.onmousemove = elementDrag;
+        elmnt.style.cursor = "grabbing";
+    }
+
+    function elementDrag(e) {
+        e = e || window.event;
+        e.preventDefault();
+        document.getElementById("chart-sidebar").style.width = Math.min(window.innerWidth, window.innerWidth - e.clientX - 10).toString() + "px";
+    }
+
+    function closeDragElement() {
+        // stop moving when mouse button is released:
+        document.onmouseup = null;
+        document.onmousemove = null;
+        elmnt.style.cursor = "grab";
+    }
+}
