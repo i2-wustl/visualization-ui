@@ -447,6 +447,12 @@ input:checked + .slider:before {
     cursor: pointer;
 }
 
+#free-draw-btn {
+    background: url("../img/free-draw-01.png") no-repeat top left;
+    background-size: contain;
+    cursor: pointer;
+}
+
 /********************************************************************************/
 /****************************** Right sidebar (charts) **************************/
 /********************************************************************************/

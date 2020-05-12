@@ -12,7 +12,7 @@ class DrawingFeature {
 
         //#region private functions
         function onMouseDown(e) {
-            if (e.originalEvent.button == 2) return; // ignore right click
+            if (e.originalEvent.button === 2) return; // ignore right click
 
             if (drawMode === drawingMode.BOX ||
                 drawMode === drawingMode.INSPECTION_BOX ||
@@ -24,6 +24,10 @@ class DrawingFeature {
                 startPoint = e.latlng;
                 drawBox(startPoint);
             }
+            if (drawMode === drawingMode.FREE) {
+                startPoint = e.latlng;
+                drawFree(startPoint);
+            }
         }
 
         function onMouseMove(e) {
@@ -33,15 +37,22 @@ class DrawingFeature {
                     updateBox(e.latlng);
                 }
             }
+            else if (drawMode === drawingMode.FREE) {
+                if (isDraggingOnDraw) {
+                    updateFree(e.latlng);
+                }
+            }
         }
 
         function onMouseUp(e) {
-            if (e.originalEvent.button == 2) return; // ignore right click
+            if (e.originalEvent.button === 2) return; // ignore right click
 
-            if (isDraggingOnDraw &&
-                (drawMode === drawingMode.BOX ||
-                    drawMode === drawingMode.INSPECTION_BOX)) {
-                finishBox();
+            if (isDraggingOnDraw)
+                if (drawMode === drawingMode.BOX ||
+                    drawMode === drawingMode.INSPECTION_BOX) {
+                    finishBox();
+                } else if (drawMode === drawingMode.FREE) {
+                    finishFree();
             }
             if (drawMode === drawingMode.BOX ||
                 drawMode === drawingMode.INSPECTION_BOX ||
@@ -49,6 +60,91 @@ class DrawingFeature {
                 toggleIsDraggingOnDraw(false);
             }
 
+        }
+
+        function drawFree(point) {
+            let drawGroup = d3.select(svgGroups.DRAWING);
+
+            // need at least 4 points for a path. Essentially a triangle that ends at itself
+            // but we can use the same point 4x
+            App.drawCurrentRegion = turf.point([point.lng, point.lat]);
+            App.drawCurrentRegion.properties.ID = ++currentRegionID;
+            App.drawCurrentRegion.properties.color = getRandomColor();
+
+            drawGroup.selectAll(svgElements.DRAWING_PATHS)
+                .data([App.drawCurrentRegion], d => d.properties.ID)
+                .enter()
+                .append("path")
+                .attr("class", svgElements.DRAWING_PATHS.substr(1))
+                .attr("d", App.pathCreator)
+                .attr("stroke", App.drawCurrentRegion.properties.color)
+                .attr("stroke-width", 4)
+                .attr("fill", "none");
+        }
+
+        function updateFree(point) {
+            let drawGroup = d3.select(svgGroups.DRAWING);
+            let tempColor = App.drawCurrentRegion.properties.color;
+
+            if (App.drawCurrentRegion.geometry.type === "Point") {
+                App.drawCurrentRegion = turf.lineString([App.drawCurrentRegion.geometry.coordinates, [point.lng, point.lat]]);
+                App.drawCurrentRegion.properties.ID = currentRegionID;
+                App.drawCurrentRegion.properties.color = tempColor;
+            } else {
+                App.drawCurrentRegion.geometry.coordinates.push([point.lng, point.lat]);
+            }
+
+            drawGroup.selectAll(svgElements.DRAWING_PATHS)
+                .data([App.drawCurrentRegion], d => d.properties.ID)
+                .join(
+                    enter => enter,
+                    update => update
+                        .attr("d", App.pathCreator),
+                    exit => exit.remove()
+                );
+
+        }
+
+        function finishFree() {
+            if (App.drawCurrentRegion.geometry.type === "Point" || App.drawCurrentRegion.geometry.coordinates.length < 2) {
+                d3.select(svgGroups.DRAWING).selectAll(svgElements.DRAWING_PATHS).remove();
+                App.drawCurrentRegion = null;
+                return;
+            }
+
+            let drawGroup = d3.select(svgGroups.DRAWING);
+            let tempColor = App.drawCurrentRegion.properties.color;
+            let options = {tolerance: 1e-5, highQuality: true};
+
+            App.drawCurrentRegion.geometry.coordinates.push([startPoint.lng, startPoint.lat]);
+            App.drawCurrentRegion = turf.simplify(turf.polygon([App.drawCurrentRegion.geometry.coordinates]), options);
+            App.drawCurrentRegion.properties.ID = currentRegionID;
+            App.drawCurrentRegion.properties.color = tempColor;
+
+            drawGroup.selectAll(svgElements.DRAWING_PATHS)
+                .data([App.drawCurrentRegion], d => d.properties.ID)
+                .join(
+                    enter => enter,
+                    update => update
+                        .attr("d", App.pathCreator)
+                        .attr("stroke-width", 0)
+                        .attr("fill", App.drawCurrentRegion.properties.color)
+                        .attr("fill-opacity", 0.5),
+                    exit => exit.remove()
+                );
+
+            let currentBox = d3.select(svgGroups.DRAWING).selectAll(svgElements.DRAWING_PATHS);
+            let drawCompleteGroup = d3.select(svgGroups.DRAWING_COMPLETE);
+
+            App.visualization.dotDensity.onSelectionChangedCurrentRegion();
+            App.visualization.dotDensity.onSelectionComplete();
+
+            App.drawRegions.features.unshift(App.drawCurrentRegion);
+            App.drawCurrentRegion = null;
+
+            currentBox.each(function () { drawCompleteGroup.append(() => this); });
+
+            App.visualization.sidebar.refresh();
         }
 
         function drawBox(point) {
@@ -66,8 +162,8 @@ class DrawingFeature {
                 .append("path")
                 .attr("class", svgElements.DRAWING_PATHS.substr(1))
                 .attr("d", App.pathCreator)
-                .style("fill", App.drawCurrentRegion.properties.color)
-                .style("fill-opacity", 0.5)
+                .attr("fill", App.drawCurrentRegion.properties.color)
+                .attr("fill-opacity", 0.5)
         }
 
         function updateBox(point) {
@@ -215,6 +311,17 @@ class DrawingFeature {
 
         //#region event handlers
 
+        d3.select("#free-draw-btn").on("click", function () {
+            let btn = d3.select(this);
+            let isActive = !btn.classed("active");
+            btn.classed("active", isActive);
+            //toggleDrawBox(isActive);
+            setDrawMode(isActive ? drawingMode.FREE : drawingMode.NONE);
+
+            d3.select("#select-region-btn").classed("active", false);
+            d3.select("#draw-box-btn").classed("active", false);
+        });
+
         d3.select("#draw-box-btn").on("click", function () {
             let btn = d3.select(this);
             let isActive = !btn.classed("active");
@@ -223,6 +330,7 @@ class DrawingFeature {
             setDrawMode(isActive ? drawingMode.BOX : drawingMode.NONE);
 
             d3.select("#select-region-btn").classed("active", false);
+            d3.select("#free-draw-btn").classed("active", false);
         });
 
         d3.select("#select-region-btn").on("click", function () {
@@ -233,6 +341,7 @@ class DrawingFeature {
             setDrawMode(isActive ? drawingMode.SELECT : drawingMode.NONE);
 
             d3.select("#draw-box-btn").classed("active", false);
+            d3.select("#free-draw-btn").classed("active", false);
         });
 
         d3.select("#clear-poly-btn").on("click", function () {
