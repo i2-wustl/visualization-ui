@@ -1,34 +1,3 @@
-/*
-Init
-GUI
-Filtering
-Viz - Events
-Viz - Updates
-Drawing
-Charts
-Util - Map
-Util - Time
-Util - Viz
-*/
-
-
-/********************************************************************************
- ******************************** Initialization ********************************
- ********************************************************************************/
-
-/* Global variable to store data, settings, etc */
-// const App = {
-//     init: async () => {
-//         App.data = await data.init();
-//         App.filters = filters.init();
-//         App.visualization = visualization.init();
-//         ui.init();
-//         timelineSlider.init();
-//         App.drawing = new DrawingFeature();
-//         App.drawing.init();
-//     }
-// };
-
 class AppMediator {
     constructor() {
         this._selectedRegion = null;
@@ -50,9 +19,10 @@ class AppMediator {
         this.drawing = null;
     }
 
-    init = async () => {
+    init = async (config) => {
+
+        this.params = await params.init(config);
         this.data = await data.init();
-        this.params = await params.init();
         this.filters = filters.init();
 
         this.visualization = visualization.init();
@@ -83,13 +53,3 @@ class AppMediator {
     }
 
 }
-
-$(document).ready(() => {
-    const app = new AppMediator();
-
-    window.App = app;
-
-    app.init();
-});
-
-
