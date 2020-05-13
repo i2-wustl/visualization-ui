@@ -318,6 +318,13 @@ input:checked + .slider:before {
     color: #1f78b4;
 }
 
+.timeline-cohort-label {
+    padding: 2px;
+}
+
+.timeline-cohort-container {
+    margin: 3px;
+}
 
 
 

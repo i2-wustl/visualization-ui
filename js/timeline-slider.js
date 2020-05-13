@@ -8,7 +8,7 @@ const timelineSlider = {
 
         const margin = { top: 5, right: 10, bottom: 5, left: 10 },
             width = 320 - margin.left - margin.right,
-            height = 70 - margin.top - margin.bottom;
+            height = 52 - margin.top - margin.bottom;
 
         const svg = d3.select("#vis")
             .append("svg")
@@ -78,14 +78,35 @@ const timelineSlider = {
 
         trackProgress.attr("x2", x.range()[0]);
 
-        const eventLabel = slider.append("text")
+        const infoBanner = d3.select("#vis").append("div");
+
+        const eventLabel = infoBanner.append("p")
             .attr("class", "timeline-event-label")
-            .attr("x", targetValue / 2)
             .attr("text-anchor", "middle")
             .text("null")
-            .attr("transform", "translate(0," + (25) + ")")
-            .attr("visibility", "hidden")
-            .style("fill", "#1f78b4");
+            .style("display", "none");
+
+        const cohortGroup = infoBanner.append("div").attr("visibility", "visible");
+
+        for (const key in App.params.patients) {
+            const cohortGroupContainer = cohortGroup.append("span")
+                .attr("class", "timeline-cohort-container");
+
+            cohortGroupContainer.append("svg")
+                .attr("height", "12px")
+                .attr("width", "12px")
+                .append("circle")
+                .attr("cx", 6)
+                .attr("cy", 6)
+                .attr("r", 4)
+                .attr("fill", App.params.patients[key].fill);
+            cohortGroupContainer.append("p")
+                .attr("id", key.replace("+","") + "-timeline-label")
+                .attr("class", "timeline-cohort-label")
+                .attr("text-anchor", "middle")
+                .text(App.data.filtered_patients.filter(d => d.COHORT === key).length)
+        }
+
 
         slider.selectAll("timeline-event")
             .data(App.data.timeline_events)
@@ -99,12 +120,13 @@ const timelineSlider = {
             .attr("name", d => "event_" + d.Name)
             .on("mouseover", function (d, i) {
                 d3.select(this).classed("active", true);
-                eventLabel.attr("visibility", "visible");
                 eventLabel.text(d.Name + " - " + formatDateIntoYear(d.Date));
+                toggleInfoBanner(false);
             })
             .on("mouseout", function (d, i) {
                 d3.select(this).classed("active", false);
-                eventLabel.attr("visibility", "hidden");
+                toggleInfoBanner(true);
+                //cohortLabel.text(App.data.filtered_patients.filter(d => d.COHORT === "COVID-19+").length)
             }).on("click", function (d, i) {
                 dateSliderUpdate(new Date(d.Date));
             });
@@ -112,6 +134,11 @@ const timelineSlider = {
         const handle = slider.insert("circle", ".track-overlay")
             .attr("class", "handle")
             .attr("r", 8);
+
+        function toggleInfoBanner(cohortVisible) {
+            eventLabel.style("display", cohortVisible ? "none" : "inline");
+            cohortGroup.style("display", cohortVisible ? "inline" : "none");
+        }
 
         function dateSliderStep() {
             dateSliderUpdate(x.invert(currentValue));
@@ -152,6 +179,11 @@ const timelineSlider = {
             let oldDate = App.filters.date;
             let formattedDate = formatDate(h);
             label.text(formattedDate);
+            for (const key in App.params.patients) {
+                cohortGroup
+                    .select("#" +key.replace("+","") + "-timeline-label")
+                    .text(App.data.filtered_patients.filter(d => d.COHORT === key).length)
+            }
             App.filters.date = new Date(formattedDate);
 
             /*
