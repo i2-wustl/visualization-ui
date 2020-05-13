@@ -98,25 +98,8 @@ class DotDensityOverlay {
         this.updateSelectionsOnFilterChanged();
     };
 
-    updateSelectionsOnFilterChanged = function () {
+    refreshSelections = function () {
         const patientDotDensityGroup = d3.select(svgGroups.PATIENT_DOT_DENSITY);
-
-        // App.drawRegions.features.forEach(d => {
-        //     // find points within the polygon
-        //     let ptsWithin = turf.pointsWithinPolygon(App.data.filtered_patient_points, d);
-        //     // create set with selected IDs so we can use them to filter
-        //     let selectedIDs = new Set();
-        //     ptsWithin.features.forEach(d => selectedIDs.add(d.properties.ID));
-        //     // keep track of selected IDs for the region
-        //     d.properties.patient_IDs = selectedIDs;
-        //     d.properties.selected_patient_IDs = selectedIDs;
-        //     // merge selected IDs with those from other regions
-        //     App.selected_patient_IDs = new Set([...App.selected_patient_IDs, ...selectedIDs]);
-        // })
-
-        if (App.drawing)
-            App.drawing.updateSelectedPatientIds();
-
         // filter patients by selected IDs
         let selected_patients = App.data.filtered_patients.filter(d => App.selected_patient_IDs.has(d.ID));
 
@@ -125,11 +108,20 @@ class DotDensityOverlay {
             .join(
                 enter => enter,
                 update => update
-                    .attr("stroke-width", 1.25)
+                    .attr("stroke-width", 1)
                     .attr("stroke", "black"),
                 exit => exit
                     .attr("stroke-width", 0),
             )
+    }
+
+    updateSelectionsOnFilterChanged = function () {
+        App.selected_patient_IDs.clear();
+
+        if (App.drawing) {
+            App.drawing.updateSelectedPatientIds();
+            this.refreshSelections();
+        }
     };
 
     onSelectionChangedCurrentRegion = function () {
