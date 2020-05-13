@@ -88,6 +88,7 @@ function initializeMap() {
     const projection = d3.geoTransform({ point: projectPointLeaflet });
     // creates geopath from projected points (SVG)
     App.pathCreator = d3.geoPath().projection(projection);
+    App.map.on('zoomstart', onZoomStart);
     // reset whenever map is zoomed
     App.map.on('zoomend', onZoomComplete);
     // recompute contours when map is done panning
@@ -108,6 +109,10 @@ function onPanComplete() {
     updateZorder();
 }
 
+function onZoomStart() {
+    App.zooming = true;
+}
+
 function onZoomComplete() {
     preprocessCoordinatesForZoom();
     visualization.dotDensity.onZoomComplete();
@@ -117,6 +122,7 @@ function onZoomComplete() {
     visualization.contours.refresh();
     visualization.sidebar.refresh();
     updateZorder();
+    App.zooming = false;
 }
 
 function onFilterChanged(sliderDragging = false) {

@@ -12,6 +12,22 @@ class drawingOverlay {
         svg.append("g").attr("id", svgGroups.DRAWING.substr(1));
     };
 
+    refresh = function () {
+        d3.selectAll(svgElements.DRAWING_PATHS)
+            .data(App.drawRegions.features, d => d.properties.ID)
+            .join(
+                enter => enter
+                    .append("path")
+                    .attr("class", svgElements.DRAWING_PATHS.substr(1))
+                    .attr("d", App.pathCreator)
+                    .style("fill", d => d.properties.color)
+                    .style("fill-opacity", 0.5),
+                update => update,
+                exit => exit.remove()
+            )
+    };
+
+
     makeSelectable = function() {
         d3.select(svgGroups.DRAWING_COMPLETE).selectAll(svgElements.DRAWING_PATHS)
             .on("mouseover", this.onMouseOver)
