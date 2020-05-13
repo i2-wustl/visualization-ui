@@ -1,10 +1,23 @@
+class timelineSlider {
+    __moving = false;
+    formatDateIntoYear = d3.timeFormat("%m/%d/%y");
+    formatDate = d3.timeFormat("%B %d, %Y");
+    numDays;
+    currentValue = 0;
+    targetValue;
+    timer;
+    x;
+    dateLabel;
+    handle;
+    trackProgress;
+    cohortGroups;
+    eventLabel;
 
-const timelineSlider = {
-    init: () => {
+
+    init = function () {
+        let timelineSlider = this;
+
         const [startDate, endDate] = d3.extent(App.data.patients, d => d.SAMPLE_COLLECTION_DATE);
-
-        const formatDateIntoYear = d3.timeFormat("%m/%d/%y");
-        const formatDate = d3.timeFormat("%B %d, %Y"); //%A,
 
         const margin = { top: 5, right: 10, bottom: 5, left: 10 },
             width = 320 - margin.left - margin.right,
@@ -14,12 +27,10 @@ const timelineSlider = {
             .append("svg")
             .attr("width", "320px")
             .attr("height", height);
-        
-        let moving = false;
-        let currentValue = 0;
-        const targetValue = width;
 
-        const numDays = daysBetween(startDate, endDate);
+        this.targetValue = width;
+
+        this.numDays = daysBetween(startDate, endDate);
 
         const playButton = d3.select("#timeline-play");
 
@@ -27,69 +38,70 @@ const timelineSlider = {
             const button = d3.select(this);
             if (button.attr("class") === "playing") {
                 button.attr("class", "not-playing");
-                moving = false;
-                clearInterval(timer);
+                this.__moving = false;
+                clearInterval(this.timer);
             } else {
                 button.attr("class", "playing");
-                moving = true;
-                timer = setInterval(dateSliderStep, 50);
+                this.__moving = true;
+                this.timer = setInterval(this.dateSliderStep, 50);
             }
         });
 
-        const x = d3.scaleTime()
+        this.x = d3.scaleTime()
             .domain([startDate, endDate])
-            .range([0, targetValue])
+            .range([0, this.targetValue])
             .clamp(true);
 
         const slider = svg.append("g")
             .attr("class", "slider")
             .attr("transform", "translate(" + margin.left + "," + 32 + ")");
 
-        const label = slider.append("text")
+        this.dateLabel = slider.append("text")
             .attr("class", "label")
             .attr("id", "dateFilter")
-            .attr("x", targetValue / 2)
+            .attr("x", this.targetValue / 2)
             .attr("text-anchor", "middle")
-            .text(formatDate(startDate))
+            .text(this.formatDate(startDate))
             .attr("transform", "translate(0," + (-10) + ")");
 
-        const trackProgress = slider.append("line")
+        this.trackProgress = slider.append("line")
             .attr("class", "track")
-            .attr("x1", x.range()[0])
-            .attr("x2", x.range()[1])
+            .attr("x1", this.x.range()[0])
+            .attr("x2", this.x.range()[1])
             .select(function () { return this.parentNode.appendChild(this.cloneNode(true)); })
             .attr("class", "track-inset")
             .select(function () { return this.parentNode.appendChild(this.cloneNode(true)); })
             .attr("class", "track-progress");
 
-        trackProgress.select(function () { return this.parentNode.appendChild(this.cloneNode(true)); })
+        this.trackProgress.select(function () { return this.parentNode.appendChild(this.cloneNode(true)); })
             .attr("class", "track-overlay")
             .call(d3.drag()
                 .on("start.interrupt", function () {
                     slider.interrupt();
-                    currentValue = Math.max(0, d3.event.x);
-                    dateSliderUpdate(x.invert(currentValue));
+                    timelineSlider.currentValue = Math.max(0, d3.event.x);
+                    timelineSlider.dateSliderUpdate(timelineSlider.x.invert(timelineSlider.currentValue));
                 })
                 .on("drag", function () {
-                    currentValue = Math.max(0, d3.event.x);
-                    dateSliderUpdate(x.invert(currentValue), true);
+                    timelineSlider.currentValue = Math.max(0, d3.event.x);
+                    timelineSlider.dateSliderUpdate(timelineSlider.x.invert(timelineSlider.currentValue), true);
                 })
             );
 
-        trackProgress.attr("x2", x.range()[0]);
+        this.trackProgress.attr("x2", this.x.range()[0]);
 
-        const infoBanner = d3.select("#vis").append("div");
+        const infoBanner = d3.select("#vis").append("div").attr("class", "timeline-info-banner");
 
-        const eventLabel = infoBanner.append("p")
+        this.eventLabel = infoBanner.append("p")
             .attr("class", "timeline-event-label")
             .attr("text-anchor", "middle")
             .text("null")
             .style("display", "none");
 
-        const cohortGroup = infoBanner.append("div").attr("visibility", "visible");
+        this.cohortGroups = infoBanner.append("div").attr("visibility", "visible");
 
         for (const key in App.params.patients) {
-            const cohortGroupContainer = cohortGroup.append("span")
+            const cohortGroupContainer = this.cohortGroups.append("span")
+                .attr("id",  key.replace("+","") + "-timeline-cohort-container")
                 .attr("class", "timeline-cohort-container");
 
             cohortGroupContainer.append("svg")
@@ -113,106 +125,90 @@ const timelineSlider = {
             .enter()
             .append("line")
             .attr("class", "timeline-event")
-            .attr("x1", d => (x(new Date(d.Date)) + x(getDateAfterDays(d.Date, 1))) / 2)
-            .attr("x2", d => (x(new Date(d.Date)) + x(getDateAfterDays(d.Date, 1))) / 2)
+            .attr("x1", d => (timelineSlider.x(new Date(d.Date)) + timelineSlider.x(getDateAfterDays(d.Date, 1))) / 2)
+            .attr("x2", d => (timelineSlider.x(new Date(d.Date)) + timelineSlider.x(getDateAfterDays(d.Date, 1))) / 2)
             .attr("y1", -4)
             .attr("y2", 4)
             .attr("name", d => "event_" + d.Name)
             .on("mouseover", function (d, i) {
                 d3.select(this).classed("active", true);
-                eventLabel.text(d.Name + " - " + formatDateIntoYear(d.Date));
-                toggleInfoBanner(false);
+                timelineSlider.eventLabel.text(d.Name + " - " + timelineSlider.formatDateIntoYear(d.Date));
+                timelineSlider.toggleInfoBanner(false);
             })
             .on("mouseout", function (d, i) {
                 d3.select(this).classed("active", false);
-                toggleInfoBanner(true);
-                //cohortLabel.text(App.data.filtered_patients.filter(d => d.COHORT === "COVID-19+").length)
+                timelineSlider.toggleInfoBanner(true);
             }).on("click", function (d, i) {
-                dateSliderUpdate(new Date(d.Date));
-            });
+            this.dateSliderUpdate(new Date(d.Date));
+        });
 
-        const handle = slider.insert("circle", ".track-overlay")
+        this.handle = slider.insert("circle", ".track-overlay")
             .attr("class", "handle")
             .attr("r", 8);
+    };
 
-        function toggleInfoBanner(cohortVisible) {
-            eventLabel.style("display", cohortVisible ? "none" : "inline");
-            cohortGroup.style("display", cohortVisible ? "inline" : "none");
+    toggleInfoBanner = function (cohortVisible) {
+        this.eventLabel.style("display", cohortVisible ? "none" : "inline");
+        this.cohortGroups.style("display", cohortVisible ? "inline" : "none");
+    };
+
+    dateSliderStep = function () {
+        this.dateSliderUpdate(this.x.invert(this.currentValue));
+        this.currentValue = this.currentValue + (this.targetValue / (this.numDays * 5));
+        if (this.currentValue > this.targetValue) {
+            this.__moving = false;
+            this.playButton.attr("class", "not-playing");
+            this.currentValue = 0;
+            clearInterval(this.timer);
         }
+    };
 
-        function dateSliderStep() {
-            dateSliderUpdate(x.invert(currentValue));
-            currentValue = currentValue + (targetValue / (numDays * 5));
-            if (currentValue > targetValue) {
-                moving = false;
-                playButton.attr("class", "not-playing");
-                currentValue = 0;
-                clearInterval(timer);
-            }
+    dateSliderUpdate = function (h, dragging = false) {
+        // update position of slider
+        let xPos = this.x(h), xStartPos;
+        this.handle.attr("cx", xPos);
+
+        switch (App.filters.cases) {
+            case cases.TOTAL:
+                xStartPos = 0;
+                break;
+            case cases.NEW:
+                xStartPos = xPos;
+                break;
+            case cases.WITHIN_X_DAYS:
+                let activeThreshold = getDateAfterDays(h, -App.filters.withXDaysValue)
+                xStartPos = this.x(activeThreshold);
+                break;
+            default:
         }
-
-        function dateSliderUpdate(h, dragging = false) {
-            // update position of slider
-            let xPos = x(h), xStartPos;
-            handle.attr("cx", xPos);
-
-            switch (App.filters.cases) {
-                case cases.TOTAL:
-                    xStartPos = 0;
-                    break;
-                case cases.NEW:
-                    xStartPos = xPos;
-                    break;
-                case cases.WITHIN_X_DAYS:
-                    let activeThreshold = getDateAfterDays(h, -App.filters.withXDaysValue)
-                    xStartPos = x(activeThreshold);
-                    break;
-                default:
-            }
-            trackProgress.attr("x1", xStartPos).attr("x2", xPos);
-                //.call(lines => lines.transition(t)
-                //    .attr("x1", xStartPos)
-                //    .attr("x2", xPos));
+        this.trackProgress.attr("x1", xStartPos).attr("x2", xPos);
+        //.call(lines => lines.transition(t)
+        //    .attr("x1", xStartPos)
+        //    .attr("x2", xPos));
 
 
-            // update text of slider
-            let oldDate = App.filters.date;
-            let formattedDate = formatDate(h);
-            label.text(formattedDate);
-            for (const key in App.params.patients) {
-                cohortGroup
-                    .select("#" +key.replace("+","") + "-timeline-label")
-                    .text(App.data.filtered_patients.filter(d => d.COHORT === key).length)
-            }
-            App.filters.date = new Date(formattedDate);
+        // update text of slider
+        let oldDate = App.filters.date;
+        let formattedDate = this.formatDate(h);
+        this.dateLabel.text(formattedDate);
+        App.filters.date = new Date(formattedDate);
 
-            /*
-            The next section was for showing the timeline event name while the play button was playing.
-            In practice, the days pass too quickly to be able to read it. Also it was a little buggy.
-            */
+        if (!datesAreOnSameDay(App.filters.date, oldDate)) {
+            visualization.refresh(dragging);
+        }
+    };
 
-            /*
-            // find name in events by date
-            var matchedEvent = App.data.timeline_events.find(e => formatDate(e.Date) == formattedDate);
-            if (matchedEvent) {
-                // get matching tick and activate it
-                slider.selectAll("[name='event_" + matchedEvent.Name+"']").classed("active", true )
-                // update and show the tick label
-                eventLabel.attr("visibility", "visible");
-                eventLabel.text(matchedEvent.Name + " - " + formatDateIntoYear(matchedEvent.Date));
-            } // check if there was a match yesterday, meaning we just left an event and should inactivate the tick and hide the label
-            else if (App.data.timeline_events.find(e => formatDate(getDateAfterDays(e.Date,1)) === formattedDate))
-            {
-                eventTicks.classed("active", false );
-                eventLabel.attr("visibility", "hidden");
-            }
-            */
-
-            if (!datesAreOnSameDay(App.filters.date, oldDate)) {
-                visualization.refresh(dragging);
-            }
-
-
+    refresh = function() {
+        for (const key in App.params.patients) {
+            this.cohortGroups
+                .select("#" + key.replace("+","") + "-timeline-label")
+                .text(App.data.filtered_patients.filter(d => d.COHORT === key).length)
+            this.cohortGroups
+                .select("#" + key.replace("+","") + "-timeline-cohort-container")
+                .style("display", App.filters.cohorts.has(key) ? "inline" : "none");
         }
     }
 }
+
+
+

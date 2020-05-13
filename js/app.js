@@ -32,7 +32,6 @@ class AppMediator {
 
 
         ui.init();
-        timelineSlider.init();
     }
 
     get selectedRegion() {
