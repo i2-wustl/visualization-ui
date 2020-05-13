@@ -326,6 +326,9 @@ input:checked + .slider:before {
     margin: 3px;
 }
 
+.timeline-info-banner {
+    height: 18px;
+}
 
 
 

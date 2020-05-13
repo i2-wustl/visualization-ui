@@ -22,6 +22,9 @@ const visualization = {
         visualization.sidebar = new Charts();
         visualization.sidebar.init();
 
+        visualization.timelineSlider = new timelineSlider();
+        visualization.timelineSlider.init();
+
         visualization.topoJSON = new TopoJSONOverlay();
         visualization.topoJSON.init();
 
@@ -135,6 +138,7 @@ function onFilterChanged(sliderDragging = false) {
     visualization.dotDensity.onFilterChanged(sliderDragging);
     visualization.medicalFacilities.onFilterChanged(sliderDragging);
     visualization.mapEvents.onFilterChanged(sliderDragging);
+    visualization.timelineSlider.refresh();
     visualization.contours.refresh();
     visualization.sidebar.refresh();
     updateZorder(sliderDragging);
