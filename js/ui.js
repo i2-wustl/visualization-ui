@@ -44,7 +44,7 @@ function initializeControls() {
         visualization.toggleContourOverlay(isActive);
     });
 
-    setupRightSidebarDraggable(document.getElementById("sidebar-draggable-right"));
+    setupRightSidebarDraggable(document.getElementById("chart-sidebar"));
 }
 
 function createPatientCohortFilters() {
