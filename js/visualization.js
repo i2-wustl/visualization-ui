@@ -147,6 +147,7 @@ function updateZorder() {
     visualization.mapEvents.raiseGroup();
     visualization.medicalFacilities.raiseGroup();
     visualization.contours.raiseGroup();
+    visualization.drawing.raiseGroup();
 }
 
 

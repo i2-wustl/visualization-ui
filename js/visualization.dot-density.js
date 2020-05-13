@@ -158,7 +158,7 @@ class DotDensityOverlay {
             .join(
                 enter => enter,
                 update => update
-                    .attr("stroke-width", 1)
+                    .attr("stroke-width", 1.25)
                     .attr("stroke", "black"),
                 exit => exit
                     .attr("stroke-width", 0),
