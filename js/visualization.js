@@ -141,6 +141,7 @@ function onFilterChanged(sliderDragging = false) {
     visualization.timelineSlider.refresh();
     visualization.contours.refresh();
     visualization.sidebar.refresh();
+    visualization.timelineSlider.refresh();
     updateZorder(sliderDragging);
 }
 
