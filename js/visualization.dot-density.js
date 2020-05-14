@@ -99,20 +99,22 @@ class DotDensityOverlay {
     };
 
     refreshSelections = function () {
-        const patientDotDensityGroup = d3.select(svgGroups.PATIENT_DOT_DENSITY);
-        // filter patients by selected IDs
-        let selected_patients = App.data.filtered_patients.filter(d => App.selected_patient_IDs.has(d.ID));
+        if (this.__isActive) {
+            const patientDotDensityGroup = d3.select(svgGroups.PATIENT_DOT_DENSITY);
+            // filter patients by selected IDs
+            let selected_patients = App.data.filtered_patients.filter(d => App.selected_patient_IDs.has(d.ID));
 
-        patientDotDensityGroup.selectAll(svgElements.PATIENT_CIRCLES)
-            .data(selected_patients, d => d.ID)
-            .join(
-                enter => enter,
-                update => update
-                    .attr("stroke-width", 1)
-                    .attr("stroke", "black"),
-                exit => exit
-                    .attr("stroke-width", 0),
-            )
+            patientDotDensityGroup.selectAll(svgElements.PATIENT_CIRCLES)
+                .data(selected_patients, d => d.ID)
+                .join(
+                    enter => enter,
+                    update => update
+                        .attr("stroke-width", 1)
+                        .attr("stroke", "black"),
+                    exit => exit
+                        .attr("stroke-width", 0),
+                )
+        }
     }
 
     updateSelectionsOnFilterChanged = function () {
@@ -136,21 +138,24 @@ class DotDensityOverlay {
         // keep track of selected IDs for the region
         App.drawCurrentRegion.properties.patient_IDs = selectedIDs;
         App.drawCurrentRegion.properties.selected_patient_IDs = selectedIDs;
-        // merge selected IDs with those from other regions
-        let selected_patient_IDs = new Set([...App.selected_patient_IDs, ...selectedIDs]);
-        // filter patients by selected IDs
-        let selected_patients = App.data.filtered_patients.filter(d => selected_patient_IDs.has(d.ID));
 
-        patientDotDensityGroup.selectAll(svgElements.PATIENT_CIRCLES)
-            .data(selected_patients, d => d.ID)
-            .join(
-                enter => enter,
-                update => update
-                    .attr("stroke-width", 1.25)
-                    .attr("stroke", "black"),
-                exit => exit
-                    .attr("stroke-width", 0),
-            )
+        if (this.__isActive) {
+            // merge selected IDs with those from other regions
+            let selected_patient_IDs = new Set([...App.selected_patient_IDs, ...selectedIDs]);
+            // filter patients by selected IDs
+            let selected_patients = App.data.filtered_patients.filter(d => selected_patient_IDs.has(d.ID));
+
+            patientDotDensityGroup.selectAll(svgElements.PATIENT_CIRCLES)
+                .data(selected_patients, d => d.ID)
+                .join(
+                    enter => enter,
+                    update => update
+                        .attr("stroke-width", 1.25)
+                        .attr("stroke", "black"),
+                    exit => exit
+                        .attr("stroke-width", 0),
+                )
+        }
     };
 
     onSelectionComplete = function () {
