@@ -2,7 +2,7 @@
  ************************************* Drawing **********************************
  ********************************************************************************/
 
-class drawingOverlay {
+class DrawingOverlay {
     init = function () {
         // Pick the SVG from the map object
         const svg = d3.select("#map").select("svg");

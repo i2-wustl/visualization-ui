@@ -10,7 +10,10 @@
     <script src="https://d3js.org/topojson.v1.min.js"></script>
 
     <!-- leaflet -->
-    <link rel="stylesheet" href="https://d19vzq90twjlae.cloudfront.net/leaflet-0.7/leaflet.css"/>
+    <link
+      rel="stylesheet"
+      href="https://d19vzq90twjlae.cloudfront.net/leaflet-0.7/leaflet.css"
+    />
     <script src="https://d19vzq90twjlae.cloudfront.net/leaflet-0.7/leaflet.js"></script>
 
     <!-- turf -->
@@ -31,16 +34,18 @@
     <script src="js/ui.js"></script>
     <script src="js/timeline-slider.js"></script>
     <script src="js/filtering.js"></script>
-    <script src="js/visualization.medical-facilities.js"></script>
-    <script src="js/visualization.map-events.js"></script>
-    <script src="js/visualization.dot-density.js"></script>
-    <script src="js/visualization.contours.js"></script>
-    <script src="js/visualization.drawing.js"></script>
+    <script src="js/overlays/topoJSON.js"></script>
+    <script src="js/overlays/medical-facilities.js"></script>
+    <script src="js/overlays/map-events.js"></script>
+    <script src="js/overlays/dot-density.js"></script>
+    <script src="js/overlays/contours.js"></script>
+    <script src="js/overlays/drawing.js"></script>
     <script src="js/visualization.js"></script>
     <script src="js/drawing.js"></script>
     <script src="js/charts.js"></script>
     <script src="js/app.js"></script>
     <link rel="stylesheet" href="css/map.css" />
+    
   </head>
   <body>
     <div class="hamburger-container-left">
@@ -59,7 +64,10 @@
       <div class="sidebar-section">
         <div class="sidebar-section-header">Filters</div>
         <div class="sidebar-section-menu">
-          <div class="sidebar-section-menu-item" id="patient-cohort-filter"></div>
+          <div
+            class="sidebar-section-menu-item"
+            id="patient-cohort-filter"
+          ></div>
           <div class="sidebar-section-menu-item" id="facility-filter"></div>
           <div class="sidebar-section-menu-item">
             <span>Cases:</span>
@@ -72,7 +80,7 @@
                 checked
               />
               <label for="total">Total</label><br />
-              <input type="radio" id="new" name="cases" value="new"/>
+              <input type="radio" id="new" name="cases" value="new" />
               <label for="new">New</label>
               <input
                 type="radio"
@@ -100,11 +108,17 @@
         <div class="sidebar-section-header">Patient Overlays</div>
         <div class="sidebar-section-menu-row">
           <div class="sidebar-section-menu-tile">
-            <div id="dot-density-btn" class="sidebar-section-menu-tile-img active"></div>
+            <div
+              id="dot-density-btn"
+              class="sidebar-section-menu-tile-img active"
+            ></div>
             <span>Dot-density</span>
           </div>
           <div class="sidebar-section-menu-tile">
-            <div id="twod-density-btn" class="sidebar-section-menu-tile-img"></div>
+            <div
+              id="twod-density-btn"
+              class="sidebar-section-menu-tile-img"
+            ></div>
             <span>2D-density</span>
           </div>
           <div class="sidebar-section-menu-tile">
@@ -118,7 +132,10 @@
         <div class="sidebar-section-header">Demographic Overlays</div>
         <div class="sidebar-section-menu-row">
           <div class="sidebar-section-menu-tile">
-            <div id="population-btn" class="sidebar-section-menu-tile-img"></div>
+            <div
+              id="population-btn"
+              class="sidebar-section-menu-tile-img"
+            ></div>
             <span>Population Density</span>
           </div>
           <div class="sidebar-section-menu-tile">
@@ -226,7 +243,7 @@
                 type: "Testing site",
                 size: 14,
                 fill: "#a6cee3",
-              }
+              },
             ],
             patients: [
               {
@@ -242,9 +259,9 @@
                 fill: "#fb9a99",
                 "fill-opacity": 0.5,
                 "z-order": 1,
-              }
-            ]
-          }
+              },
+            ],
+          },
         });
       });
     </script>

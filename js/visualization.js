@@ -16,11 +16,14 @@ const visualization = {
         visualization.contours = new ContoursOverlay();
         visualization.contours.init();
 
-        visualization.drawing = new drawingOverlay();
+        visualization.drawing = new DrawingOverlay();
         visualization.drawing.init();
 
         visualization.sidebar = new Charts();
         visualization.sidebar.init();
+
+        visualization.topoJSON = new TopoJSONOverlay();
+        visualization.topoJSON.init();
 
         preprocessCoordinatesForZoom();
         onFilterChanged();
@@ -145,6 +148,8 @@ function onFilterChanged(sliderDragging = false) {
 
 /* SVG doesn't support z-index, so we need to add them back in desired order */
 function updateZorder() {
+
+    visualization.topoJSON.raiseGroup();
     visualization.dotDensity.raiseGroup();
     visualization.mapEvents.raiseGroup();
     visualization.medicalFacilities.raiseGroup();
