@@ -169,24 +169,7 @@ class timelineSlider {
         let xPos = this.x(h), xStartPos;
         this.handle.attr("cx", xPos);
 
-        switch (App.filters.cases) {
-            case cases.TOTAL:
-                xStartPos = 0;
-                break;
-            case cases.NEW:
-                xStartPos = xPos;
-                break;
-            case cases.WITHIN_X_DAYS:
-                let activeThreshold = getDateAfterDays(h, -App.filters.withXDaysValue)
-                xStartPos = this.x(activeThreshold);
-                break;
-            default:
-        }
-        this.trackProgress.attr("x1", xStartPos).attr("x2", xPos);
-        //.call(lines => lines.transition(t)
-        //    .attr("x1", xStartPos)
-        //    .attr("x2", xPos));
-
+        this.trackProgressUpdate(xPos);
 
         // update text of slider
         let oldDate = App.filters.date;
@@ -208,6 +191,31 @@ class timelineSlider {
                 .select("#" + key.replace("+","") + "-timeline-cohort-container")
                 .style("display", App.filters.cohorts.has(key) ? "inline" : "none");
         }
+        this.trackProgressUpdate(false);
+    }
+
+    trackProgressUpdate = function(moving = true) {
+        const t = d3.transition().duration(moving ? 0 : 250);
+        let xPos = this.handle.attr("cx"), xStartPos;
+
+        switch (App.filters.cases) {
+            case cases.TOTAL:
+                xStartPos = 0;
+                break;
+            case cases.NEW:
+                xStartPos = xPos;
+                break;
+            case cases.WITHIN_X_DAYS:
+                let activeThreshold = getDateAfterDays(this.x.invert(xPos), -App.filters.withXDaysValue)
+                xStartPos = this.x(activeThreshold);
+                break;
+            default:
+        }
+
+        this.trackProgress
+            .call(lines => lines.transition(t)
+            .attr("x1", xStartPos)
+            .attr("x2", xPos));
     }
 }
 
