@@ -193,7 +193,7 @@ input:checked + .slider:before {
     z-index: 14;
     overflow-x: hidden;
     width: 402px;
-    height: 65px;
+    height: 68px;
     display: flex;
     align-items: center;
 }
