@@ -12,6 +12,7 @@ class timelineSlider {
     trackProgress;
     cohortGroups;
     eventLabel;
+    playButton;
 
 
     init = function () {
@@ -32,18 +33,18 @@ class timelineSlider {
 
         this.numDays = daysBetween(startDate, endDate);
 
-        const playButton = d3.select("#timeline-play");
+        this.playButton = d3.select("#timeline-play");
 
-        playButton.on("click", function () {
+        this.playButton.on("click", function () {
             const button = d3.select(this);
             if (button.attr("class") === "playing") {
                 button.attr("class", "not-playing");
                 this.__moving = false;
-                clearInterval(this.timer);
+                clearInterval(timelineSlider.timer);
             } else {
                 button.attr("class", "playing");
                 this.__moving = true;
-                this.timer = setInterval(this.dateSliderStep, 50);
+                timelineSlider.timer = setInterval(timelineSlider.dateSliderStep, 50, timelineSlider);
             }
         });
 
@@ -152,14 +153,14 @@ class timelineSlider {
         this.cohortGroups.style("display", cohortVisible ? "inline" : "none");
     };
 
-    dateSliderStep = function () {
-        this.dateSliderUpdate(this.x.invert(this.currentValue));
-        this.currentValue = this.currentValue + (this.targetValue / (this.numDays * 5));
-        if (this.currentValue > this.targetValue) {
-            this.__moving = false;
-            this.playButton.attr("class", "not-playing");
-            this.currentValue = 0;
-            clearInterval(this.timer);
+    dateSliderStep = function (timelineSlider) {
+        timelineSlider.currentValue = timelineSlider.currentValue + (timelineSlider.targetValue / (timelineSlider.numDays * 5));
+        timelineSlider.dateSliderUpdate(timelineSlider.x.invert(timelineSlider.currentValue));
+        if (timelineSlider.currentValue > timelineSlider.targetValue) {
+            timelineSlider.__moving = false;
+            timelineSlider.playButton.attr("class", "not-playing");
+            timelineSlider.currentValue = 0;
+            clearInterval(timelineSlider.timer);
         }
     };
 
