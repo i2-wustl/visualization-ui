@@ -84,7 +84,7 @@ function initializeMap() {
     // Initialize SVG layer
     App.map._initPathRoot();
 
-    d3.select(".leaflet-bottom.leaflet-right").style("z-index", 0);
+    d3.select(".leaflet-bottom.leaflet-left").style("z-index", 0);
 
     // use D3's custom geo transform method to implement the above
     const projection = d3.geoTransform({ point: projectPointLeaflet });

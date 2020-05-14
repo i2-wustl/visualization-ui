@@ -109,10 +109,12 @@ function createMedicalFacilityFilters() {
 
 function openControlPanel() {
     document.getElementById("control-sidebar").style.width = "250px";
+    d3.select(".leaflet-bottom.leaflet-left").style("left", "250px");
 }
 
 function closeControlPanel() {
     document.getElementById("control-sidebar").style.width = "0";
+    d3.select(".leaflet-bottom.leaflet-left").style("left", "0px");
 }
 
 function openChartPanel() {
