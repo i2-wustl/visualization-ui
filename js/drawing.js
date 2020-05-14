@@ -69,7 +69,7 @@ class DrawingFeature {
             // but we can use the same point 4x
             App.drawCurrentRegion = turf.point([point.lng, point.lat]);
             App.drawCurrentRegion.properties.ID = ++currentRegionID;
-            App.drawCurrentRegion.properties.color = getRandomColor();
+            App.drawCurrentRegion.properties.color = getNextColor(0.75, 0.75, 0, 3, currentRegionID-1);
 
             drawGroup.selectAll(svgElements.DRAWING_PATHS)
                 .data([App.drawCurrentRegion], d => d.properties.ID)
