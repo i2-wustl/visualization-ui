@@ -22,7 +22,8 @@ class DrawingOverlay {
                     .attr("d", App.pathCreator)
                     .style("fill", d => d.properties.color)
                     .style("fill-opacity", 0.5),
-                update => update,
+                update => update
+                    .attr("d", App.pathCreator),
                 exit => exit.remove()
             )
     };
@@ -32,15 +33,23 @@ class DrawingOverlay {
         d3.select(svgGroups.DRAWING_COMPLETE).selectAll(svgElements.DRAWING_PATHS)
             .on("mouseover", this.onMouseOver)
             .on("mouseout", this.onMouseOut)
-            .on("click", this.onClick)
+            .on("mousedown", this.onMouseDown)
     };
 
     makeUnSelectable = function() {
         d3.select(svgGroups.DRAWING_COMPLETE).selectAll(svgElements.DRAWING_PATHS)
+            .attr("cursor", null)
             .on("mouseover", null)
             .on("mouseout", null)
-            .on("click", null);
+            .on("mousedown", null);
         App.selectedRegion = null;
+    };
+
+    makeOthersUnSelectable = function() {
+        d3.select(svgGroups.DRAWING_COMPLETE).selectAll(svgElements.DRAWING_PATHS).filter(":not(.selected)")
+            .on("mouseover", null)
+            .on("mouseout", null)
+            .on("mousedown", null);
     };
 
     unSelectAll = function() {
@@ -54,6 +63,7 @@ class DrawingOverlay {
             .filter(":not(.selected)")
             .attr("stroke-width", 2)
             .attr("stroke", "blue")
+            .attr("cursor", "move")
     };
 
     onMouseOut = function() {
@@ -62,7 +72,7 @@ class DrawingOverlay {
             .attr("stroke-width", 0)
     };
 
-    onClick = function(d, i) {
+    onMouseDown = function(d, i) {
         // unselect previously selected
         d3.select(svgGroups.DRAWING_COMPLETE).selectAll(svgElements.DRAWING_PATHS)
             .filter(".selected")
@@ -90,6 +100,7 @@ class DrawingOverlay {
         drawingRegionGroup.raise();
         currentDrawingGroup.raise();
     };
+
 }
 
 

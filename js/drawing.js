@@ -12,21 +12,27 @@ class DrawingFeature {
 
         //#region private functions
         function onMouseDown(e) {
-            if (e.originalEvent.button == 2 || App.zooming) return; // ignore right click
+            if (e.originalEvent.button === 2 || App.zooming) return; // ignore right click
+
+            startPoint = e.latlng;
 
             if (drawMode === drawingMode.BOX ||
                 drawMode === drawingMode.INSPECTION_BOX ||
-                drawMode === drawingMode.FREE) {
+                drawMode === drawingMode.FREE ||
+                drawMode === drawingMode.SELECT) {
                 toggleIsDraggingOnDraw(true);
             }
             if (drawMode === drawingMode.BOX ||
                 drawMode === drawingMode.INSPECTION_BOX) {
-                startPoint = e.latlng;
                 drawBox(startPoint);
             }
-            if (drawMode === drawingMode.FREE) {
-                startPoint = e.latlng;
+            else if (drawMode === drawingMode.FREE) {
                 drawFree(startPoint);
+            }
+            else if (drawMode === drawingMode.SELECT &&
+                    App.selectedRegion &&
+                    turf.booleanPointInPolygon(turf.point([startPoint.lng, startPoint.lat]), App.selectedRegion)) {
+                setDrawMode(drawingMode.MOVING)
             }
         }
 
@@ -41,25 +47,33 @@ class DrawingFeature {
                 if (isDraggingOnDraw) {
                     updateFree(e.latlng);
                 }
+            } else if (drawMode === drawingMode.MOVING) {
+                if (isDraggingOnDraw) {
+                    moveSelectedRegion(startPoint, e.latlng);
+                    startPoint = e.latlng;
+                }
             }
         }
 
         function onMouseUp(e) {
             if (e.originalEvent.button === 2 || App.zooming) return; // ignore right click
 
-            if (isDraggingOnDraw)
+            if (isDraggingOnDraw) {
                 if (drawMode === drawingMode.BOX ||
                     drawMode === drawingMode.INSPECTION_BOX) {
                     finishBox();
                 } else if (drawMode === drawingMode.FREE) {
                     finishFree();
+                } else if (drawMode === drawingMode.MOVING) {
+                    setDrawMode(drawingMode.SELECT);
+                }
             }
             if (drawMode === drawingMode.BOX ||
                 drawMode === drawingMode.INSPECTION_BOX ||
-                drawMode === drawingMode.FREE) {
+                drawMode === drawingMode.FREE ||
+                drawMode === drawingMode.SELECT) {
                 toggleIsDraggingOnDraw(false);
             }
-
         }
 
         function drawFree(point) {
@@ -208,6 +222,21 @@ class DrawingFeature {
 
         }
 
+        function moveSelectedRegion(startPoint, endPoint) {
+            let diffX = endPoint.lng - startPoint.lng;
+            let diffY = endPoint.lat - startPoint.lat;
+            App.selectedRegion.geometry.coordinates.forEach(path => {
+                path.forEach(d => {
+                    d[0] += diffX;
+                    d[1] += diffY;
+                });
+            });
+            updateSelectedPatientIdsAfterRegionChange(App.selectedRegion);
+            App.visualization.sidebar.refresh();
+            App.visualization.drawing.refresh();
+            App.visualization.dotDensity.refreshSelections();
+        }
+
         function deleteAllBoxes() {
             App.drawRegions = turf.featureCollection([]);
             App.selected_patient_IDs.clear();
@@ -232,22 +261,42 @@ class DrawingFeature {
             }
         }
 
+        function updateSelectedPatientIdsForRegion(region) {
+            let selectedIDs = new Set();
+            // find points within the polygon
+            let ptsWithin = turf.pointsWithinPolygon(App.data.filtered_patient_points, region);
+            // create set with selected IDs so we can use them to filter
+
+            ptsWithin.features.forEach(d => selectedIDs.add(d.properties.ID));
+            // keep track of selected IDs for the region
+            region.properties.patient_IDs = selectedIDs;
+            region.properties.selected_patient_IDs = selectedIDs;
+        }
+
+        function updateSelectedPatientIdsAfterRegionChange(region) {
+            // remove selected IDs from global list if they aren't selected by any other region
+            region.properties.selected_patient_IDs.forEach(d => {
+                let isSelectedByOtherRegion = false;
+                App.drawRegions.features.forEach(r => {
+                    if (r !== region && r.properties.selected_patient_IDs.has(d)) {
+                        isSelectedByOtherRegion = true;
+                    }
+                })
+                if (!isSelectedByOtherRegion) {
+                    App.selected_patient_IDs.delete(d);
+                }
+            });
+            updateSelectedPatientIdsForRegion(region);
+            region.properties.selected_patient_IDs.forEach(d => App.selected_patient_IDs.add(d));
+        }
+
         function updateSelectedPatientIds() {
             App.selected_patient_IDs.clear();
 
             App.drawRegions.features.forEach(d => {
-                let selectedIDs = new Set();
-                // find points within the polygon
-                let ptsWithin = turf.pointsWithinPolygon(App.data.filtered_patient_points, d);
-                // create set with selected IDs so we can use them to filter
-
-                ptsWithin.features.forEach(d => selectedIDs.add(d.properties.ID));
-                // keep track of selected IDs for the region
-                d.properties.patient_IDs = selectedIDs;
-                d.properties.selected_patient_IDs = selectedIDs;
+                updateSelectedPatientIdsForRegion(d);
                 // merge selected IDs with those from other regions
-                App.selected_patient_IDs = new Set([...App.selected_patient_IDs, ...selectedIDs]);
-
+                App.selected_patient_IDs = new Set([...App.selected_patient_IDs, ...d.properties.selected_patient_IDs]);
             });
 
         }
@@ -270,6 +319,11 @@ class DrawingFeature {
                 case drawingMode.SELECT:
                     toggleDraggable(true);
                     App.visualization.drawing.makeSelectable();
+                    d3.select("#map").classed("drawing", false);
+                    break;
+                case drawingMode.MOVING:
+                    toggleDraggable(false);
+                    App.visualization.drawing.makeOthersUnSelectable();
                     d3.select("#map").classed("drawing", false);
                     break;
                 default:
