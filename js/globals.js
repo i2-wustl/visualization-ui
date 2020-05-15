@@ -36,7 +36,8 @@ const drawingMode = {
     SELECT: "select",
     BOX: "box",
     INSPECTION_BOX: "inspection_box",
-    FREE: "free"
+    FREE: "free",
+    MOVING: "moving"
 };
 
 const initialRadiusValues = {
