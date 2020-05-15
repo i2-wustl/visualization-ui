@@ -378,10 +378,10 @@ input:checked + .slider:before {
 }
 
 .sidebar-section-menu-tile {
-    margin:auto;
+    margin: 0px auto auto auto;
     text-align: center;
     width:83px;
-    margin-top:0px;
+
 }
 
 .sidebar-section-menu-tile span {
