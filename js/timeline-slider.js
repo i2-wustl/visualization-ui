@@ -33,19 +33,38 @@ class timelineSlider {
 
         this.numDays = daysBetween(startDate, endDate);
 
+        console.log(startDate, endDate, this.numDays)
+
         this.playButton = d3.select("#timeline-play");
 
         this.playButton.on("click", function () {
-            const button = d3.select(this);
+            const button = d3.select("#timeline-play");
             if (button.attr("class") === "playing") {
-                button.attr("class", "not-playing");
-                this.__moving = false;
+                timelineSlider.pauseSlider();
                 clearInterval(timelineSlider.timer);
             } else {
                 button.attr("class", "playing");
-                this.__moving = true;
-                timelineSlider.timer = setInterval(timelineSlider.dateSliderStep, 50, timelineSlider);
+                timelineSlider.__moving = true;
+                timelineSlider.timer = setInterval(timelineSlider.dateSliderStep, 50, timelineSlider, 0.2);
             }
+        });
+
+        d3.select("#timeline-back-one-day").on("click", function () {
+            const button = d3.select("#timeline-play");
+            if (button.attr("class") === "playing") {
+                timelineSlider.pauseSlider();
+                clearInterval(timelineSlider.timer);
+            }
+            timelineSlider.dateSliderStep(timelineSlider, -1);
+        });
+
+        d3.select("#timeline-forward-one-day").on("click", function () {
+            const button = d3.select("#timeline-play");
+            if (button.attr("class") === "playing") {
+                timelineSlider.pauseSlider();
+                clearInterval(timelineSlider.timer);
+            }
+            timelineSlider.dateSliderStep(timelineSlider, 1);
         });
 
         this.x = d3.scaleTime()
@@ -153,8 +172,11 @@ class timelineSlider {
         this.cohortGroups.style("display", cohortVisible ? "inline" : "none");
     };
 
-    dateSliderStep = function (timelineSlider) {
-        timelineSlider.currentValue = timelineSlider.currentValue + (timelineSlider.targetValue / (timelineSlider.numDays * 5));
+    dateSliderStep = function (timelineSlider, stepSizeDays) {
+        // needs that small offset to avoid landing on date boundaries which caused the day to not change
+        timelineSlider.currentValue = 1e-3 + timelineSlider.currentValue + (timelineSlider.targetValue * stepSizeDays / timelineSlider.numDays);
+        // keep the value within the acceptable range
+        timelineSlider.currentValue = Math.min(timelineSlider.targetValue, Math.max(0, timelineSlider.currentValue));
         timelineSlider.dateSliderUpdate(timelineSlider.x.invert(timelineSlider.currentValue));
         if (timelineSlider.currentValue > timelineSlider.targetValue) {
             timelineSlider.__moving = false;
@@ -216,6 +238,11 @@ class timelineSlider {
             .call(lines => lines.transition(t)
             .attr("x1", xStartPos)
             .attr("x2", xPos));
+    }
+
+    pauseSlider = function() {
+        d3.select("#timeline-play").attr("class", "not-playing");
+        timelineSlider.__moving = false;
     }
 }
 
