@@ -28,6 +28,8 @@ const visualization = {
         visualization.topoJSON = new TopoJSONOverlay();
         visualization.topoJSON.init();
 
+        updateZorder();
+
         preprocessCoordinatesForZoom();
         onFilterChanged();
 
@@ -36,15 +38,12 @@ const visualization = {
     refresh: onFilterChanged,
     toggle2dDensityOverlay: (isActive) => {
         visualization.contours.toggle2d(isActive);
-        updateZorder();
     },
     toggleContourOverlay: (isActive) => {
         visualization.contours.toggleContours(isActive);
-        updateZorder();
     },
     toggleDotDensity: (isActive) => {
         visualization.dotDensity.toggle(isActive);
-        updateZorder();
     },
 
     toggleScrollWheelZoomable: (isScrollWheelZoomable) => {
@@ -114,7 +113,6 @@ function initializeMap() {
 
 function onPanComplete() {
     visualization.contours.refresh();
-    updateZorder();
 }
 
 function onZoomStart() {
@@ -129,7 +127,6 @@ function onZoomComplete() {
     visualization.drawing.onZoomComplete();
     visualization.contours.refresh();
     visualization.sidebar.refresh();
-    updateZorder();
     App.zooming = false;
 }
 
@@ -142,7 +139,6 @@ function onFilterChanged(sliderDragging = false) {
     visualization.contours.refresh();
     visualization.sidebar.refresh();
     visualization.timelineSlider.refresh();
-    updateZorder(sliderDragging);
 }
 
 
@@ -153,7 +149,6 @@ function onFilterChanged(sliderDragging = false) {
 
 /* SVG doesn't support z-index, so we need to add them back in desired order */
 function updateZorder() {
-
     visualization.topoJSON.raiseGroup();
     visualization.dotDensity.raiseGroup();
     visualization.mapEvents.raiseGroup();
