@@ -100,21 +100,25 @@ class DotDensityOverlay {
 
     refreshSelections = function () {
         if (this.__isActive) {
-            const patientDotDensityGroup = d3.select(svgGroups.PATIENT_DOT_DENSITY);
             // filter patients by selected IDs
             let selected_patients = App.data.filtered_patients.filter(d => App.selected_patient_IDs.has(d.ID));
-
-            patientDotDensityGroup.selectAll(svgElements.PATIENT_CIRCLES)
-                .data(selected_patients, d => d.ID)
-                .join(
-                    enter => enter,
-                    update => update
-                        .attr("stroke-width", 1)
-                        .attr("stroke", "black"),
-                    exit => exit
-                        .attr("stroke-width", 0),
-                )
+            this.refreshSelectionDots(selected_patients);
         }
+    }
+
+    refreshSelectionDots = function(selected_patients) {
+        const patientDotDensityGroup = d3.select(svgGroups.PATIENT_DOT_DENSITY);
+
+        patientDotDensityGroup.selectAll(svgElements.PATIENT_CIRCLES)
+            .data(selected_patients, d => d.ID)
+            .join(
+                enter => enter,
+                update => update
+                    .attr("stroke-width", 1.25)
+                    .attr("stroke", "black"),
+                exit => exit
+                    .attr("stroke-width", 0),
+            )
     }
 
     updateSelectionsOnFilterChanged = function () {
@@ -127,8 +131,6 @@ class DotDensityOverlay {
     };
 
     onSelectionChangedCurrentRegion = function () {
-        const patientDotDensityGroup = d3.select(svgGroups.PATIENT_DOT_DENSITY);
-
         // find points within the polygon
         let ptsWithin = turf.pointsWithinPolygon(App.data.filtered_patient_points, App.drawCurrentRegion);
         // create set with selected IDs so we can use them to filter
@@ -145,16 +147,7 @@ class DotDensityOverlay {
             // filter patients by selected IDs
             let selected_patients = App.data.filtered_patients.filter(d => selected_patient_IDs.has(d.ID));
 
-            patientDotDensityGroup.selectAll(svgElements.PATIENT_CIRCLES)
-                .data(selected_patients, d => d.ID)
-                .join(
-                    enter => enter,
-                    update => update
-                        .attr("stroke-width", 1.25)
-                        .attr("stroke", "black"),
-                    exit => exit
-                        .attr("stroke-width", 0),
-                )
+            this.refreshSelectionDots(selected_patients);
         }
     };
 
