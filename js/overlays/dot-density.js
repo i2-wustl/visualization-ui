@@ -10,13 +10,22 @@ class DotDensityOverlay {
         const svg = d3.select("#map").select("svg");
 
         // Make groups for each type overlay so we can select by them later
-        svg.append("g").attr("id", svgGroups.PATIENT_DOT_DENSITY.substr(1));
+        const patientDotDensityGroup = svg.append("g").attr("id", svgGroups.PATIENT_DOT_DENSITY.substr(1));
+
+        // Add the cohorts in their z-order
+        Object.values(App.params.patients).sort((a, b) => a["z-order"] - b["z-order"]).forEach( p => {
+            patientDotDensityGroup.append("g").attr("id", this.getCohortSVGGroupName(p.cohort))
+        });
 
         this.__isActive = d3.select("#dot-density-btn").classed("active");
 
         App.selected_patient_IDs = new Set();
         // App.drawRegions = turf.featureCollection([]);
     };
+
+    getCohortSVGGroupName = function(cohort) {
+        return(svgGroups.PATIENT_DOT_DENSITY.substr(1) + "-" + cohort.replace("+",""))
+    }
 
     toggle = function (isActive) {
         this.__isActive = isActive;
@@ -63,23 +72,31 @@ class DotDensityOverlay {
         const t = svg.transition().duration(sliderDragging ? 0 : 250);
 
         if (this.__isActive) {
-            patientDotDensityGroup.selectAll(svgElements.PATIENT_CIRCLES)
-                .data(App.data.filtered_patients, d => d.ID)
-                .join(
-                    enter => enter
-                        .append("circle")
-                        .attr("class", svgElements.PATIENT_CIRCLES.substr(1))
-                        .attr("cx", d => d.point.x)
-                        .attr("cy", d => d.point.y)
-                        .attr("r", 0)
-                        .attr("fill",  d => App.params.patients[d.COHORT].fill)
-                        .attr("fill-opacity",  d => App.params.patients[d.COHORT]["fill-opacity"]),
-                    update => update,
-                    exit => exit.call(circles => circles.transition(t).remove()
-                        .attr("r", 0))
-                )
-                .call(circles => circles.transition(t)
-                    .attr("r",  d => App.params.patients[d.COHORT].radius));
+            for (const key in App.params.patients) {
+                const cohortPatients = App.data.filtered_patients.filter(d => d.COHORT === key);
+                const cohortGroup = patientDotDensityGroup.select("#" + this.getCohortSVGGroupName(App.params.patients[key].cohort));
+                const fill = App.params.patients[key].fill;
+                const fillOpacity = App.params.patients[key]["fill-opacity"];
+                const radius = App.params.patients[key].radius;
+
+                cohortGroup.selectAll(svgElements.PATIENT_CIRCLES)
+                    .data(cohortPatients, d => d.ID)
+                    .join(
+                        enter => enter
+                            .append("circle")
+                            .attr("class", svgElements.PATIENT_CIRCLES.substr(1))
+                            .attr("cx", d => d.point.x)
+                            .attr("cy", d => d.point.y)
+                            .attr("r", 0)
+                            .attr("fill", fill)
+                            .attr("fill-opacity", fillOpacity),
+                        update => update,
+                        exit => exit.call(circles => circles.transition(t).remove()
+                            .attr("r", 0))
+                    )
+                    .call(circles => circles.transition(t)
+                        .attr("r", radius));
+            }
 
         }
         else { // TODO: don't even bother doing this if the dot-density button wasn't clicked
@@ -164,11 +181,6 @@ class DotDensityOverlay {
     };
 
     raiseGroup = function () {
-        const patientDotDensityGroup = d3.select(svgGroups.PATIENT_DOT_DENSITY);
-
-        // raise them in the order of the cohort's z-order
-        Object.values(App.params.patients).sort((a, b) => a["z-order"] - b["z-order"]).forEach( p => {
-            patientDotDensityGroup.selectAll(svgElements.PATIENT_CIRCLES).filter(d => d.COHORT == p.cohort).raise();
-        });
+        d3.select(svgGroups.PATIENT_DOT_DENSITY).raise();
     }
 }
