@@ -97,12 +97,8 @@ class DotDensityOverlay {
                     let dateOfGroup = new Date(cohortGroupForDay.attr("date"));
 
                     if (dateOfGroup < newStartDate || dateOfGroup > newEndDate) {
-                        if (sliderDragging) {
-                            cohortGroupForDay.remove();
-                        } else {
-                            cohortGroupForDay.selectAll(svgElements.PATIENT_CIRCLES).transition(t).remove().attr("r", 0);
-                            cohortGroupForDay.transition(t).remove();
-                        }
+                        cohortGroupForDay.selectAll(svgElements.PATIENT_CIRCLES).transition(t).remove().attr("r", 0);
+                        cohortGroupForDay.transition(t).remove();
                     }
                 });
 
