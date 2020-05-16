@@ -74,7 +74,7 @@ class DotDensityOverlay {
         if (this.__isActive) {
             for (const key in App.params.patients) {
                 const cohortPatients = App.data.filtered_patients.filter(d => d.COHORT === key);
-                const cohortGroup = patientDotDensityGroup.select("#" + this.getCohortSVGGroupName(App.params.patients[key].cohort));
+                const cohortGroup = patientDotDensityGroup.select("#" + this.getCohortSVGGroupName(key));
                 const fill = App.params.patients[key].fill;
                 const fillOpacity = App.params.patients[key]["fill-opacity"];
                 const radius = App.params.patients[key].radius;
@@ -101,14 +101,7 @@ class DotDensityOverlay {
         }
         else { // TODO: don't even bother doing this if the dot-density button wasn't clicked
             // remove patient circles
-            patientDotDensityGroup.selectAll(svgElements.PATIENT_CIRCLES)
-                .data([])
-                .join(
-                    enter => enter,
-                    update => update,
-                    exit => exit.call(circles => circles.transition(t).remove()
-                        .attr("r", 0))
-                )
+            patientDotDensityGroup.selectAll(svgElements.PATIENT_CIRCLES).transition(t).remove().attr("r", 0);
         }
 
         this.precomputePointsForTurf();
@@ -129,7 +122,7 @@ class DotDensityOverlay {
 
         for (const key in App.params.patients) {
             const cohortSelectedPatients = selected_patients.filter(d => d.COHORT === key);
-            const cohortGroup = patientDotDensityGroup.select("#" + this.getCohortSVGGroupName(App.params.patients[key].cohort));
+            const cohortGroup = patientDotDensityGroup.select("#" + this.getCohortSVGGroupName(key));
 
             cohortGroup.selectAll(svgElements.PATIENT_CIRCLES)
                 .data(cohortSelectedPatients, d => d.ID)
