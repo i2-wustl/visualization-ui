@@ -66,14 +66,27 @@ const filters = {
                 patients = patients.filter(d => datesAreOnSameDay(d.SAMPLE_COLLECTION_DATE, App.filters.date));
                 break;
             case cases.WITHIN_X_DAYS:
-                let activeThreshold = getDateAfterDays(App.filters.date, -App.filters.withXDaysValue);
-                patients = patients.filter(d => d.SAMPLE_COLLECTION_DATE <= App.filters.date && d.SAMPLE_COLLECTION_DATE > activeThreshold);
+                let activeThreshold = getDateAfterDays(App.filters.date, -(App.filters.withXDaysValue-1));
+                patients = patients.filter(d => d.SAMPLE_COLLECTION_DATE <= App.filters.date && d.SAMPLE_COLLECTION_DATE >= activeThreshold);
                 break;
             default:
         }
 
         // Filter by cohort
         App.data.filtered_patients = patients.filter(d => App.filters.cohorts.has(d.COHORT));
+    },
+    getFilteredDateRange: () => {
+        switch (App.filters.cases) {
+            case cases.TOTAL:
+                return [App.data.startDate, App.filters.date]
+            case cases.NEW:
+                return [App.data.date, App.filters.date]
+            case cases.WITHIN_X_DAYS:
+                let activeThreshold = new Date(Math.max(App.data.startDate, getDateAfterDays(App.filters.date, -(App.filters.withXDaysValue-1))));
+                return [activeThreshold, App.filters.date]
+            default:
+                return [App.data.date, App.filters.date]
+        }
     }
 
 };

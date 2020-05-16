@@ -26,14 +26,14 @@ async function processData() {
             p.Longitude = Number(p.Longitude) + (Math.random() - 0.5) * 2e-2;
         });
 
-        const startDate = d3.min(data.patients, d => d.SAMPLE_COLLECTION_DATE);
+        [data.startDate, data.endDate] = d3.extent(data.patients, d => d.SAMPLE_COLLECTION_DATE);
 
         data.timeline_events.forEach(function (e) {
             e.Date = new Date(e.Date)
         });
 
         data.medical_facilities.forEach(function (e) {
-            e.Date = e.Date === "" ? startDate : new Date(e.Date);
+            e.Date = e.Date === "" ? data.startDate : new Date(e.Date);
         });
 
 

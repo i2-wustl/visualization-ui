@@ -1,7 +1,13 @@
 class DotDensityOverlay {
     __isActive = false;
+    __formatDateIntoYear = d3.timeFormat("%m-%d-%y");
+
     get isActive() {
         return this.__isActive;
+    }
+
+    get formatDateIntoYear() {
+        return this.__formatDateIntoYear
     }
 
     init = function () {
@@ -25,6 +31,10 @@ class DotDensityOverlay {
 
     getCohortSVGGroupName = function(cohort) {
         return(svgGroups.PATIENT_DOT_DENSITY.substr(1) + "-" + cohort.replace("+",""))
+    }
+
+    getCohortDateSVGGroupName = function(cohort, dateOfGroup) {
+        return(this.getCohortSVGGroupName(cohort)) + "-" + this.formatDateIntoYear(dateOfGroup);
     }
 
     toggle = function (isActive) {
@@ -71,31 +81,61 @@ class DotDensityOverlay {
 
         const t = svg.transition().duration(sliderDragging ? 0 : 250);
 
+        const [newStartDate, newEndDate] = filters.getFilteredDateRange();
+
         if (this.__isActive) {
             for (const key in App.params.patients) {
                 const cohortPatients = App.data.filtered_patients.filter(d => d.COHORT === key);
-                const cohortGroup = patientDotDensityGroup.select("#" + this.getCohortSVGGroupName(App.params.patients[key].cohort));
+                const cohortGroup = patientDotDensityGroup.select("#" + this.getCohortSVGGroupName(key));
                 const fill = App.params.patients[key].fill;
                 const fillOpacity = App.params.patients[key]["fill-opacity"];
                 const radius = App.params.patients[key].radius;
 
-                cohortGroup.selectAll(svgElements.PATIENT_CIRCLES)
-                    .data(cohortPatients, d => d.ID)
-                    .join(
-                        enter => enter
-                            .append("circle")
-                            .attr("class", svgElements.PATIENT_CIRCLES.substr(1))
-                            .attr("cx", d => d.point.x)
-                            .attr("cy", d => d.point.y)
-                            .attr("r", 0)
-                            .attr("fill", fill)
-                            .attr("fill-opacity", fillOpacity),
-                        update => update,
-                        exit => exit.call(circles => circles.transition(t).remove()
-                            .attr("r", 0))
-                    )
-                    .call(circles => circles.transition(t)
-                        .attr("r", radius));
+                // remove groups for days that are out of range
+                cohortGroup.selectAll("g").each(function(d, i) {
+                    let cohortGroupForDay = d3.select(this);
+                    let dateOfGroup = new Date(cohortGroupForDay.attr("date"));
+
+                    if (dateOfGroup < newStartDate || dateOfGroup > newEndDate) {
+                        if (sliderDragging) {
+                            cohortGroupForDay.remove();
+                        } else {
+                            cohortGroupForDay.selectAll(svgElements.PATIENT_CIRCLES).transition(t).remove().attr("r", 0);
+                            cohortGroupForDay.transition(t).remove();
+                        }
+                    }
+                });
+
+                // add groups for days that are newly in range
+                for (let dateOfGroup = new Date(newStartDate); dateOfGroup <= newEndDate; dateOfGroup.setDate(dateOfGroup.getDate() + 1)) {
+                    let cohortGroupForDay = cohortGroup.select("#" + this.getCohortDateSVGGroupName(key, dateOfGroup))
+                    // this is a date that isn't in the viz yet so we add a new group and the corresponding dots
+                    if (cohortGroupForDay.empty()) {
+                        cohortGroupForDay = cohortGroup.append("g")
+                            .attr("id", this.getCohortDateSVGGroupName(key, dateOfGroup))
+                            .attr("date", dateOfGroup);
+                    }
+
+                    let cohortPatientsForDay = cohortPatients.filter(d => datesAreOnSameDay(d.SAMPLE_COLLECTION_DATE, dateOfGroup));
+                    // TODO only update if it was a filter that would affect this overlay
+                    cohortGroupForDay.selectAll(svgElements.PATIENT_CIRCLES)
+                        .data(cohortPatientsForDay, d => d.ID)
+                        .join(
+                            enter => enter
+                                .append("circle")
+                                .attr("class", svgElements.PATIENT_CIRCLES.substr(1))
+                                .attr("cx", d => d.point.x)
+                                .attr("cy", d => d.point.y)
+                                .attr("r", 0)
+                                .attr("fill", fill)
+                                .attr("fill-opacity", fillOpacity),
+                            update => update,
+                            exit => exit.call(circles => circles.transition(t).remove()
+                                .attr("r", 0))
+                        )
+                        .call(circles => circles.transition(t)
+                            .attr("r", radius));
+                }
             }
 
         }
@@ -129,18 +169,24 @@ class DotDensityOverlay {
 
         for (const key in App.params.patients) {
             const cohortSelectedPatients = selected_patients.filter(d => d.COHORT === key);
-            const cohortGroup = patientDotDensityGroup.select("#" + this.getCohortSVGGroupName(App.params.patients[key].cohort));
+            const cohortGroup = patientDotDensityGroup.select("#" + this.getCohortSVGGroupName(key));
 
-            cohortGroup.selectAll(svgElements.PATIENT_CIRCLES)
-                .data(cohortSelectedPatients, d => d.ID)
-                .join(
-                    enter => enter,
-                    update => update
-                        .attr("stroke-width", 1.25)
-                        .attr("stroke", "black"),
-                    exit => exit
-                        .attr("stroke-width", 0),
-                )
+            cohortGroup.selectAll("g").each(function(d, i) {
+                let cohortGroupForDay = d3.select(this);
+                let dateOfGroup = new Date(cohortGroupForDay.attr("date"));
+                let cohortPatientsForDay = cohortSelectedPatients.filter(d => datesAreOnSameDay(d.SAMPLE_COLLECTION_DATE, dateOfGroup));
+
+                cohortGroupForDay.selectAll(svgElements.PATIENT_CIRCLES)
+                    .data(cohortPatientsForDay, d => d.ID)
+                    .join(
+                        enter => enter,
+                        update => update
+                            .attr("stroke-width", 1.25)
+                            .attr("stroke", "black"),
+                        exit => exit
+                            .attr("stroke-width", 0),
+                    )
+            });
         }
     }
 
