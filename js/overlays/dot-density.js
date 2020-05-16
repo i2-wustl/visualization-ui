@@ -117,16 +117,26 @@ class DotDensityOverlay {
 
     refreshSelections = function () {
         if (this.__isActive) {
-            const patientDotDensityGroup = d3.select(svgGroups.PATIENT_DOT_DENSITY);
             // filter patients by selected IDs
             let selected_patients = App.data.filtered_patients.filter(d => App.selected_patient_IDs.has(d.ID));
 
-            patientDotDensityGroup.selectAll(svgElements.PATIENT_CIRCLES)
-                .data(selected_patients, d => d.ID)
+            this.refreshSelectionDots(selected_patients);
+        }
+    }
+
+    refreshSelectionDots = function(selected_patients) {
+        const patientDotDensityGroup = d3.select(svgGroups.PATIENT_DOT_DENSITY);
+
+        for (const key in App.params.patients) {
+            const cohortSelectedPatients = selected_patients.filter(d => d.COHORT === key);
+            const cohortGroup = patientDotDensityGroup.select("#" + this.getCohortSVGGroupName(App.params.patients[key].cohort));
+
+            cohortGroup.selectAll(svgElements.PATIENT_CIRCLES)
+                .data(cohortSelectedPatients, d => d.ID)
                 .join(
                     enter => enter,
                     update => update
-                        .attr("stroke-width", 1)
+                        .attr("stroke-width", 1.25)
                         .attr("stroke", "black"),
                     exit => exit
                         .attr("stroke-width", 0),
@@ -134,18 +144,17 @@ class DotDensityOverlay {
         }
     }
 
+
     updateSelectionsOnFilterChanged = function () {
         App.selected_patient_IDs.clear();
 
-        if (App.drawing) {
+        if (App.drawing && App.drawRegions.features.length > 0) {
             App.drawing.updateSelectedPatientIds();
             this.refreshSelections();
         }
     };
 
     onSelectionChangedCurrentRegion = function () {
-        const patientDotDensityGroup = d3.select(svgGroups.PATIENT_DOT_DENSITY);
-
         // find points within the polygon
         let ptsWithin = turf.pointsWithinPolygon(App.data.filtered_patient_points, App.drawCurrentRegion);
         // create set with selected IDs so we can use them to filter
@@ -162,16 +171,7 @@ class DotDensityOverlay {
             // filter patients by selected IDs
             let selected_patients = App.data.filtered_patients.filter(d => selected_patient_IDs.has(d.ID));
 
-            patientDotDensityGroup.selectAll(svgElements.PATIENT_CIRCLES)
-                .data(selected_patients, d => d.ID)
-                .join(
-                    enter => enter,
-                    update => update
-                        .attr("stroke-width", 1.25)
-                        .attr("stroke", "black"),
-                    exit => exit
-                        .attr("stroke-width", 0),
-                )
+            this.refreshSelectionDots(selected_patients);
         }
     };
 
