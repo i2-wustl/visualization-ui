@@ -181,7 +181,6 @@ class timelineSlider {
         if (timelineSlider.currentValue >= timelineSlider.targetValue) {
             timelineSlider.__moving = false;
             timelineSlider.playButton.attr("class", "not-playing");
-            timelineSlider.currentValue = timelineSlider.targetValue;
             clearInterval(timelineSlider.timer);
         }
     };
