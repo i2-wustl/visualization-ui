@@ -217,16 +217,18 @@ function getNextColor(init_chroma, init_luminance, initial_hue, num_divisions, i
     const step = i % num_divisions;
     const huePerStep = 360.0 / num_divisions;
 
-    let hueOffsetForCycleGroup = 0, distBetweenOffsets = 0, cycleInGroup = 0;
+    let hueOffsetForCycleGroup = 0, distBetweenOffsets = 0, offsetCycleInGroup = 0;
     if (cycle > 0 ) {
         const group = Math.floor(Math.log2(cycle))+1;
         const groupSquared = Math.pow(2, group);
         hueOffsetForCycleGroup = huePerStep / groupSquared;
         distBetweenOffsets = hueOffsetForCycleGroup * 2;
-        cycleInGroup = cycle - Math.pow(2, group-1);
+        const cycleInGroup = cycle - (groupSquared/2);
+        const offsetStepSize = Math.floor(groupSquared/4) === 1 ? 1 : 1 + Math.floor(groupSquared/4);
+        offsetCycleInGroup = (cycleInGroup * offsetStepSize) % (groupSquared/2);
     }
 
-    const firstHueInCycle = hueOffsetForCycleGroup + (distBetweenOffsets * cycleInGroup);
+    const firstHueInCycle = hueOffsetForCycleGroup + (distBetweenOffsets * offsetCycleInGroup);
 
     const hue = initial_hue + firstHueInCycle + (huePerStep * step);
 
