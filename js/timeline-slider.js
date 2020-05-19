@@ -178,10 +178,10 @@ class timelineSlider {
         // keep the value within the acceptable range
         timelineSlider.currentValue = Math.min(timelineSlider.targetValue, Math.max(0, timelineSlider.currentValue));
         timelineSlider.dateSliderUpdate(timelineSlider.x.invert(timelineSlider.currentValue));
-        if (timelineSlider.currentValue > timelineSlider.targetValue) {
+        if (timelineSlider.currentValue >= timelineSlider.targetValue) {
             timelineSlider.__moving = false;
             timelineSlider.playButton.attr("class", "not-playing");
-            timelineSlider.currentValue = 0;
+            timelineSlider.currentValue = timelineSlider.targetValue;
             clearInterval(timelineSlider.timer);
         }
     };
