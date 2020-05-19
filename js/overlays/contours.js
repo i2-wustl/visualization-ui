@@ -1,6 +1,36 @@
 class ContoursOverlay {
     __is2dActive = false;
     __isContoursActive = false;
+    __getDensityThresholds = (points, cellSize) => {
+        let gridCounts = {};
+    
+        let maxCount = 0;
+        points.forEach(d => {
+            let xIndex = Math.floor(d.pointDensity[0] / cellSize);
+            let yIndex = Math.floor(d.pointDensity[1] / cellSize);
+    
+            if (!(xIndex in gridCounts)) {
+                gridCounts[xIndex] = {}
+            }
+            if (!(yIndex in gridCounts[xIndex])) {
+                gridCounts[xIndex][yIndex] = 0
+            }
+    
+            gridCounts[xIndex][yIndex]++;
+            maxCount = Math.max(maxCount, gridCounts[xIndex][yIndex]);
+        });
+    
+        // WARNING: empirical magic numbers
+        let maxThreshold = Math.log2(maxCount);
+        let maxLogThreshold = Math.floor(maxThreshold);
+        let logThresholds = Array.from(Array(10 + maxLogThreshold * 4).keys());
+        let thresholds = logThresholds.map(x => Math.pow(1.25, x) / 20);
+        thresholds.unshift(0.01);
+    
+        //console.log(maxThreshold, thresholds);
+    
+        return (thresholds);
+    }
 
     init = function () {
         // Pick the SVG from the map object
@@ -92,7 +122,7 @@ class ContoursOverlay {
             // Maybe you can do better, but is it really worth your time?
             let cellSize = App.map.getZoom() > 11 ? Math.pow(2, App.map.getZoom() - 10) : 2;
             let bandwidth = App.map.getZoom() > 11 ? Math.pow(2, App.map.getZoom() - 10) : 4;
-            let thresholds = getDensityThresholds(patientsOnScreen, cellSize);
+            let thresholds = __getDensityThresholds(patientsOnScreen, cellSize);
 
             // Compute the density data
             let densityData = d3.contourDensity()

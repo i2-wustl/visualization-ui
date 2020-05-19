@@ -162,94 +162,28 @@ function updateZorder() {
 /********************************************************************************
  ********************************** Utility - Viz *******************************
  ********************************************************************************/
-
+//ToDo refactor to importable utilities
 function getCircleRadius(zoom, init) {
     return (init / (Math.pow(1.15, 18 - zoom)));
 }
-
-function getDensityThresholds(points, cellSize) {
-    let gridCounts = {};
-
-    let maxCount = 0;
-    points.forEach(d => {
-        let xIndex = Math.floor(d.pointDensity[0] / cellSize);
-        let yIndex = Math.floor(d.pointDensity[1] / cellSize);
-
-        if (!(xIndex in gridCounts)) {
-            gridCounts[xIndex] = {}
-        }
-        if (!(yIndex in gridCounts[xIndex])) {
-            gridCounts[xIndex][yIndex] = 0
-        }
-
-        gridCounts[xIndex][yIndex]++;
-        maxCount = Math.max(maxCount, gridCounts[xIndex][yIndex]);
-    });
-
-    // WARNING: empirical magic numbers
-    let maxThreshold = Math.log2(maxCount);
-    let maxLogThreshold = Math.floor(maxThreshold);
-    let logThresholds = Array.from(Array(10 + maxLogThreshold * 4).keys());
-    let thresholds = logThresholds.map(x => Math.pow(1.25, x) / 20);
-    thresholds.unshift(0.01);
-
-    //console.log(maxThreshold, thresholds);
-
-    return (thresholds);
-}
-
-function getRandomColor() {
-    var letters = '0123456789ABCDEF'.split('');
-    var color = '#';
-    for (var i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-}
-
-function getNextColor(init_chroma, init_luminance, initial_hue, num_divisions, i) {
-    const cycle = Math.floor(i / num_divisions);
-    const step = i % num_divisions;
-    const huePerStep = 360.0 / num_divisions;
-
-    let hueOffsetForCycleGroup = 0, distBetweenOffsets = 0, offsetCycleInGroup = 0;
-    if (cycle > 0 ) {
-        const group = Math.floor(Math.log2(cycle))+1;
-        const groupSquared = Math.pow(2, group);
-        hueOffsetForCycleGroup = huePerStep / groupSquared;
-        distBetweenOffsets = hueOffsetForCycleGroup * 2;
-        const cycleInGroup = cycle - (groupSquared/2);
-        const offsetStepSize = Math.floor(groupSquared/4) === 1 ? 1 : 1 + Math.floor(groupSquared/4);
-        offsetCycleInGroup = (cycleInGroup * offsetStepSize) % (groupSquared/2);
-    }
-
-    const firstHueInCycle = hueOffsetForCycleGroup + (distBetweenOffsets * offsetCycleInGroup);
-
-    const hue = initial_hue + firstHueInCycle + (huePerStep * step);
-
-    const clCycle = (cycle % 5);
-
-    return chroma({ l:(init_luminance-(clCycle*(0.05)))*100, c:(init_chroma-(clCycle*(0.05)))*100, h:hue });
-    //return chroma({ l:lightness*100, c:saturation*100, h:hue });
-    //return d3.hsl(hue, saturation, lightness)
-}
-
-
 
 /********************************************************************************
  ********************************** Utility - Map *******************************
  ********************************************************************************/
 
+ //Todo make private function
 // Use Leaflets projection API for drawing svg path (creates a stream of projected points)
 function projectPointLeaflet(x, y) {
     const point = App.map.latLngToLayerPoint(new L.latLng(y, x));
     this.stream.point(point.x, point.y)
 }
 
+//Todo refactor to importable utilities
 function projectPoint(x, y) {
     return (App.map.latLngToLayerPoint(new L.latLng(x, y)));
 }
 
+//Todo make private function
 function preprocessCoordinatesForZoom() {
     visualization.dotDensity.onPreZoom();
     visualization.mapEvents.onPreZoom();
