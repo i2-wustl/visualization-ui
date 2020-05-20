@@ -122,7 +122,7 @@ class ContoursOverlay {
             // Maybe you can do better, but is it really worth your time?
             let cellSize = App.map.getZoom() > 11 ? Math.pow(2, App.map.getZoom() - 10) : 2;
             let bandwidth = App.map.getZoom() > 11 ? Math.pow(2, App.map.getZoom() - 10) : 4;
-            let thresholds = __getDensityThresholds(patientsOnScreen, cellSize);
+            let thresholds = this.__getDensityThresholds(patientsOnScreen, cellSize);
 
             // Compute the density data
             let densityData = d3.contourDensity()
