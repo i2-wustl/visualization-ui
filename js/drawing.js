@@ -364,6 +364,7 @@ class DrawingFeature {
                     toggleDraggable(true);
                     toggleActiveButton(drawingButtonIDs.SELECT);
                     App.visualization.drawing.makeSelectable();
+                    d3.select("#map").classed("drawing", false);
                     break;
                 case drawingMode.MOVING:
                     toggleDraggable(false);
