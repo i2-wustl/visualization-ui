@@ -180,7 +180,7 @@ input:checked + .slider:before {
 /************************************** Drawing *********************************/
 /********************************************************************************/
 
-#drawing-notification-bar {
+#drawing-tooltip-bar {
     width: 400px;
     position:absolute;
     left:50%;
@@ -194,7 +194,7 @@ input:checked + .slider:before {
     display: flex;
 }
 
-#drawing-notification-bar-content {
+#drawing-tooltip-bar-content {
     padding: 10px;
     width: 100%;
     background-color: #555555;
@@ -203,7 +203,7 @@ input:checked + .slider:before {
     vertical-align: middle;
 }
 
-#drawing-notification-bar-content p {
+#drawing-tooltip-bar-content p {
     display: none;
     margin: 0px;
 }
