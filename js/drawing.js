@@ -350,7 +350,7 @@ class DrawingFeature {
         function setDrawMode(mode) {
             drawMode = mode;
 
-            toggleNotificationBar();
+            toggleTooltipBar();
 
             switch (drawMode) {
                 case drawingMode.NONE:
@@ -395,31 +395,42 @@ class DrawingFeature {
             }
         }
 
-        function toggleNotificationBar() {
-            let notificationBar = d3.select("#drawing-tooltip-bar");
+        function toggleTooltipBar() {
+            let tooltipBar = d3.select("#drawing-tooltip-bar");
 
             switch (drawMode) {
                 case drawingMode.NONE:
-                    notificationBar.style("visibility", "hidden")
+                    hideTooltipBar();
                     break;
                 case drawingMode.SELECT:
-                    notificationBar.style("visibility", "visible")
-                    notificationBar.selectAll("p").style("display", "none");
+                    showTooltipBar();
+                    tooltipBar.selectAll("p").style("display", "none");
                     d3.select("#drawing-tooltip-select").style("display", "block");
                     break;
                 case drawingMode.BOX:
-                    notificationBar.style("visibility", "visible")
-                    notificationBar.selectAll("p").style("display", "none");
+                    showTooltipBar();
+                    tooltipBar.selectAll("p").style("display", "none");
                     d3.select("#drawing-tooltip-box").style("display", "block");
                     break;
                 case drawingMode.FREE:
-                    notificationBar.style("visibility", "visible")
-                    notificationBar.selectAll("p").style("display", "none");
+                    showTooltipBar();
+                    tooltipBar.selectAll("p").style("display", "none");
                     d3.select("#drawing-tooltip-free").style("display", "block");
                     break;
                 default:
             }
+        }
 
+        function showTooltipBar() {
+            let tooltipBar = d3.select("#drawing-tooltip-bar");
+            tooltipBar.style("visibility", "visible")
+            tooltipBar.style("max-height", "100px")
+        }
+
+        function hideTooltipBar() {
+            let tooltipBar = d3.select("#drawing-tooltip-bar");
+            tooltipBar.style("visibility", "hidden")
+            tooltipBar.style("max-height", "0px")
         }
 
         function toggleIsDraggingOnDraw(isDragging) {
