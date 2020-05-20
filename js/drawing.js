@@ -9,6 +9,11 @@ class DrawingFeature {
         let drawMode = drawingMode.NONE;
         App.drawRegions = turf.featureCollection([]);
         let isDraggingOnDraw = false;
+        const drawingButtonIDs = {
+            SELECT: "#select-region-btn",
+            BOX: "#draw-box-btn",
+            FREE: "#free-draw-btn",
+        };
 
         //#region private functions
         function onMouseDown(e) {
@@ -338,26 +343,44 @@ class DrawingFeature {
             switch (drawMode) {
                 case drawingMode.NONE:
                     toggleDraggable(true);
+                    toggleActiveButton();
                     App.visualization.drawing.makeUnSelectable();
                     App.visualization.drawing.unSelectAll();
                     d3.select("#map").classed("drawing", false);
                     break;
                 case drawingMode.SELECT:
                     toggleDraggable(true);
+                    toggleActiveButton(drawingButtonIDs.SELECT);
                     App.visualization.drawing.makeSelectable();
-                    d3.select("#map").classed("drawing", false);
                     break;
                 case drawingMode.MOVING:
                     toggleDraggable(false);
                     App.visualization.drawing.makeOthersUnSelectable();
                     d3.select("#map").classed("drawing", false);
                     break;
-                default:
+                case drawingMode.BOX:
                     toggleDraggable(false);
+                    toggleActiveButton(drawingButtonIDs.BOX);
                     App.visualization.drawing.makeUnSelectable();
                     App.visualization.drawing.unSelectAll();
                     d3.select("#map").classed("drawing", true);
+                    break;
+                case drawingMode.FREE:
+                    toggleDraggable(false);
+                    toggleActiveButton(drawingButtonIDs.FREE);
+                    App.visualization.drawing.makeUnSelectable();
+                    App.visualization.drawing.unSelectAll();
+                    d3.select("#map").classed("drawing", true);
+                    break;
+                default:
             }
+        }
+
+        function toggleActiveButton(activeButtonID = "") {
+            for (const key in drawingButtonIDs) {
+                d3.select(drawingButtonIDs[key]).classed("active", drawingButtonIDs[key] === activeButtonID);
+            }
+
         }
 
         function toggleIsDraggingOnDraw(isDragging) {
@@ -394,36 +417,18 @@ class DrawingFeature {
         //#region event handlers
 
         d3.select("#free-draw-btn").on("click", function () {
-            let btn = d3.select(this);
-            let isActive = !btn.classed("active");
-            btn.classed("active", isActive);
-            //toggleDrawBox(isActive);
+            let isActive = !d3.select(this).classed("active");
             setDrawMode(isActive ? drawingMode.FREE : drawingMode.NONE);
-
-            d3.select("#select-region-btn").classed("active", false);
-            d3.select("#draw-box-btn").classed("active", false);
         });
 
         d3.select("#draw-box-btn").on("click", function () {
-            let btn = d3.select(this);
-            let isActive = !btn.classed("active");
-            btn.classed("active", isActive);
-            //toggleDrawBox(isActive);
+            let isActive = !d3.select(this).classed("active");
             setDrawMode(isActive ? drawingMode.BOX : drawingMode.NONE);
-
-            d3.select("#select-region-btn").classed("active", false);
-            d3.select("#free-draw-btn").classed("active", false);
         });
 
         d3.select("#select-region-btn").on("click", function () {
-            let btn = d3.select(this);
-            let isActive = !btn.classed("active");
-            btn.classed("active", isActive);
-            //toggleSelect(isActive);
+            let isActive = !d3.select(this).classed("active");
             setDrawMode(isActive ? drawingMode.SELECT : drawingMode.NONE);
-
-            d3.select("#draw-box-btn").classed("active", false);
-            d3.select("#free-draw-btn").classed("active", false);
         });
 
         d3.select("#clear-poly-btn").on("click", function () {
@@ -434,10 +439,12 @@ class DrawingFeature {
         // different parts can listen to the same event.
         d3.select("body").on("keydown", function() {
             if (App.selectedRegion) {
-                if( d3.event.keyCode === 8 || d3.event.keyCode === 46 ) {
+                if (d3.event.keyCode === 8 || d3.event.keyCode === 46) {
                     deleteSelectedBoxes();
                 }
-
+            }
+            if (d3.event.keyCode === 27) {
+                setDrawMode(drawingMode.NONE)
             }
         });
 
