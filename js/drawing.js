@@ -274,6 +274,11 @@ class DrawingFeature {
             App.visualization.sidebar.refresh();
             App.visualization.drawing.refresh();
             App.visualization.dotDensity.refreshSelections();
+
+            // no point in selecting when all the regions are gone, make the user's life easier
+            if (drawMode === drawingMode.SELECT) {
+                setDrawMode(drawingMode.NONE);
+            }
         }
 
         function deleteSelectedBoxes() {
@@ -289,6 +294,11 @@ class DrawingFeature {
                 App.visualization.sidebar.refresh();
                 App.visualization.drawing.refresh();
                 App.visualization.dotDensity.refreshSelections();
+
+                // no point in selecting when all the regions are gone, make the user's life easier
+                if (App.drawRegions.features.length === 0) {
+                    setDrawMode(drawingMode.NONE);
+                }
             }
         }
 
@@ -340,6 +350,8 @@ class DrawingFeature {
         function setDrawMode(mode) {
             drawMode = mode;
 
+            toggleNotificationBar();
+
             switch (drawMode) {
                 case drawingMode.NONE:
                     toggleDraggable(true);
@@ -379,6 +391,32 @@ class DrawingFeature {
         function toggleActiveButton(activeButtonID = "") {
             for (const key in drawingButtonIDs) {
                 d3.select(drawingButtonIDs[key]).classed("active", drawingButtonIDs[key] === activeButtonID);
+            }
+        }
+
+        function toggleNotificationBar() {
+            let notificationBar = d3.select("#drawing-notification-bar");
+
+            switch (drawMode) {
+                case drawingMode.NONE:
+                    notificationBar.style("visibility", "hidden")
+                    break;
+                case drawingMode.SELECT:
+                    notificationBar.style("visibility", "visible")
+                    notificationBar.selectAll("p").style("display", "none");
+                    d3.select("#drawing-notification-select").style("display", "block");
+                    break;
+                case drawingMode.BOX:
+                    notificationBar.style("visibility", "visible")
+                    notificationBar.selectAll("p").style("display", "none");
+                    d3.select("#drawing-notification-box").style("display", "block");
+                    break;
+                case drawingMode.FREE:
+                    notificationBar.style("visibility", "visible")
+                    notificationBar.selectAll("p").style("display", "none");
+                    d3.select("#drawing-notification-free").style("display", "block");
+                    break;
+                default:
             }
 
         }
