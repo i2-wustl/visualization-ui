@@ -396,7 +396,7 @@ class DrawingFeature {
         }
 
         function toggleNotificationBar() {
-            let notificationBar = d3.select("#drawing-notification-bar");
+            let notificationBar = d3.select("#drawing-tooltip-bar");
 
             switch (drawMode) {
                 case drawingMode.NONE:
@@ -405,17 +405,17 @@ class DrawingFeature {
                 case drawingMode.SELECT:
                     notificationBar.style("visibility", "visible")
                     notificationBar.selectAll("p").style("display", "none");
-                    d3.select("#drawing-notification-select").style("display", "block");
+                    d3.select("#drawing-tooltip-select").style("display", "block");
                     break;
                 case drawingMode.BOX:
                     notificationBar.style("visibility", "visible")
                     notificationBar.selectAll("p").style("display", "none");
-                    d3.select("#drawing-notification-box").style("display", "block");
+                    d3.select("#drawing-tooltip-box").style("display", "block");
                     break;
                 case drawingMode.FREE:
                     notificationBar.style("visibility", "visible")
                     notificationBar.selectAll("p").style("display", "none");
-                    d3.select("#drawing-notification-free").style("display", "block");
+                    d3.select("#drawing-tooltip-free").style("display", "block");
                     break;
                 default:
             }
