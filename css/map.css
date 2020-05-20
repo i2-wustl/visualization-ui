@@ -195,7 +195,7 @@ input:checked + .slider:before {
 }
 
 #drawing-tooltip-bar-content {
-    padding: 10px;
+    padding: 10px 15px 10px 15px;
     width: 100%;
     background-color: #555555;
     border-radius: 0px 0px 20px 20px;
