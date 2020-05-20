@@ -32,9 +32,7 @@ class timelineSlider {
         this.targetValue = width;
 
         this.numDays = daysBetween(startDate, endDate);
-
-        console.log(startDate, endDate, this.numDays)
-
+        
         this.playButton = d3.select("#timeline-play");
 
         this.playButton.on("click", function () {
