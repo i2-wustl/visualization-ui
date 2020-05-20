@@ -197,7 +197,8 @@ input:checked + .slider:before {
 #drawing-notification-bar-content {
     padding: 10px;
     width: 100%;
-    background-color: #444444;
+    background-color: #555555;
+    border-radius: 0px 0px 20px 20px;
     opacity: 0.7;
     vertical-align: middle;
 }
