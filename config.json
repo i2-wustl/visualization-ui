@@ -1,0 +1,44 @@
+{
+  "data": {
+    "files": {
+      "timeline_events": "data/timeline-events.csv",
+      "patients": "data/patients.tsv",
+      "medical_facilities": "data/medical-facilities.csv"
+    }
+  },
+  "overlays": {
+    "medical_facilities": [
+      {
+        "type": "Hospital",
+        "size": 14,
+        "fill": "#1f78b4"
+      },
+      {
+        "type": "Drive-thru",
+        "size": 14,
+        "fill": "#a6cee3"
+      },
+      {
+        "type": "Testing site",
+        "size": 14,
+        "fill": "#a6cee3"
+      }
+    ],
+    "patients": [
+      {
+        "cohort": "COVID-19+",
+        "size": 9,
+        "fill": "#B92739",
+        "fill-opacity": 0.75,
+        "z-order": 2
+      },
+      {
+        "cohort": "Influenza+",
+        "size": 9,
+        "fill": "#fb9a99",
+        "fill-opacity": 0.5,
+        "z-order": 1
+      }
+    ]
+  }
+}

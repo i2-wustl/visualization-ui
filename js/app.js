@@ -1,4 +1,4 @@
-class AppMediator {
+class PandemicTracker {
     constructor() {
         this._selectedRegion = null;
 
@@ -22,8 +22,13 @@ class AppMediator {
 
     init = async (config) => {
 
-        this.params = await params.init(config);
-        this.data = await data.init();
+
+        const configLoader = new ConfigLoader();
+        this.params = await configLoader.init(config);
+
+        const dataLoader = new DataLoader();
+        this.data = await dataLoader.init(this.params);
+
         this.filters = filters.init();
 
         this.visualization = visualization.init();
@@ -37,6 +42,7 @@ class AppMediator {
     get selectedRegion() {
         return this._selectedRegion;
     }
+
     /** Property setter for selectedRegion. This pattern is an easy shim for pub/sub to enable cross feature communication */
     set selectedRegion(value) {
         console.debug('Setting selected region', value);
