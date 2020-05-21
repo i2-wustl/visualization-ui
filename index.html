@@ -10,10 +10,7 @@
     <script src="https://d3js.org/topojson.v1.min.js"></script>
 
     <!-- leaflet -->
-    <link
-      rel="stylesheet"
-      href="https://d19vzq90twjlae.cloudfront.net/leaflet-0.7/leaflet.css"
-    />
+    <link rel="stylesheet" href="https://d19vzq90twjlae.cloudfront.net/leaflet-0.7/leaflet.css" />
     <script src="https://d19vzq90twjlae.cloudfront.net/leaflet-0.7/leaflet.js"></script>
 
     <!-- turf -->
@@ -29,8 +26,8 @@
 
     <script src="js/globals.js"></script>
     <script src="js/time-utilities.js"></script>
+    <script src="js/config.js"></script>
     <script src="js/data.js"></script>
-    <script src="js/params.js"></script>
     <script src="js/ui.js"></script>
     <script src="js/timeline-slider.js"></script>
     <script src="js/filtering.js"></script>
@@ -45,7 +42,6 @@
     <script src="js/charts.js"></script>
     <script src="js/app.js"></script>
     <link rel="stylesheet" href="css/map.css" />
-    
   </head>
   <body>
     <div class="hamburger-container-left">
@@ -64,31 +60,16 @@
       <div class="sidebar-section">
         <div class="sidebar-section-header">Filters</div>
         <div class="sidebar-section-menu">
-          <div
-            class="sidebar-section-menu-item"
-            id="patient-cohort-filter"
-          ></div>
+          <div class="sidebar-section-menu-item" id="patient-cohort-filter"></div>
           <div class="sidebar-section-menu-item" id="facility-filter"></div>
           <div class="sidebar-section-menu-item">
             <span>Cases:</span>
             <div class="sidebar-section-menu-row">
-              <input
-                type="radio"
-                id="total"
-                name="cases"
-                value="total"
-                checked
-              />
+              <input type="radio" id="total" name="cases" value="total" checked />
               <label for="total">Total</label><br />
               <input type="radio" id="new" name="cases" value="new" />
               <label for="new">New</label>
-              <input
-                type="radio"
-                id="within-x-days"
-                name="cases"
-                value="within-x-days"
-                checked
-              />
+              <input type="radio" id="within-x-days" name="cases" value="within-x-days" checked />
               <label for="within-x-days">Within</label>
               <input
                 type="number"
@@ -108,17 +89,11 @@
         <div class="sidebar-section-header">Patient Overlays</div>
         <div class="sidebar-section-menu-row">
           <div class="sidebar-section-menu-tile">
-            <div
-              id="dot-density-btn"
-              class="sidebar-section-menu-tile-img active"
-            ></div>
+            <div id="dot-density-btn" class="sidebar-section-menu-tile-img active"></div>
             <span>Dot-density</span>
           </div>
           <div class="sidebar-section-menu-tile">
-            <div
-              id="twod-density-btn"
-              class="sidebar-section-menu-tile-img"
-            ></div>
+            <div id="twod-density-btn" class="sidebar-section-menu-tile-img"></div>
             <span>2D-density</span>
           </div>
           <div class="sidebar-section-menu-tile">
@@ -132,10 +107,7 @@
         <div class="sidebar-section-header">Demographic Overlays</div>
         <div class="sidebar-section-menu-row">
           <div class="sidebar-section-menu-tile">
-            <div
-              id="population-btn"
-              class="sidebar-section-menu-tile-img"
-            ></div>
+            <div id="population-btn" class="sidebar-section-menu-tile-img"></div>
             <span>Population Density</span>
           </div>
           <div class="sidebar-section-menu-tile">
@@ -158,31 +130,31 @@
         </div>
       </div>
       <!-- Drawing controls -->
-        <div class="sidebar-section">
-            <div class="sidebar-section-header">Drawing</div>
-            <div class="sidebar-section-menu-row">
-                <div class="sidebar-section-menu-tile">
-                    <div id="free-draw-btn" class="sidebar-section-menu-tile-img"></div>
-                    <span>Draw Region</span>
-                </div>
-                <div class="sidebar-section-menu-tile">
-                    <div id="draw-box-btn" class="sidebar-section-menu-tile-img"></div>
-                    <span>Draw Box</span>
-                </div>
-                <div class="sidebar-section-menu-tile">
-                    <div id="select-region-btn" class="sidebar-section-menu-tile-img"></div>
-                    <span>Select Region</span>
-                </div>
-            </div>
-            <div class="sidebar-section-menu-row">
-                <div class="sidebar-section-menu-tile">
-                    <div id="clear-poly-btn" class="sidebar-section-menu-tile-img"></div>
-                    <span>Clear Regions</span>
-                </div>
-                <div class="sidebar-section-menu-tile"></div>
-                <div class="sidebar-section-menu-tile"></div>
-            </div>
+      <div class="sidebar-section">
+        <div class="sidebar-section-header">Drawing</div>
+        <div class="sidebar-section-menu-row">
+          <div class="sidebar-section-menu-tile">
+            <div id="free-draw-btn" class="sidebar-section-menu-tile-img"></div>
+            <span>Draw Region</span>
+          </div>
+          <div class="sidebar-section-menu-tile">
+            <div id="draw-box-btn" class="sidebar-section-menu-tile-img"></div>
+            <span>Draw Box</span>
+          </div>
+          <div class="sidebar-section-menu-tile">
+            <div id="select-region-btn" class="sidebar-section-menu-tile-img"></div>
+            <span>Select Region</span>
+          </div>
         </div>
+        <div class="sidebar-section-menu-row">
+          <div class="sidebar-section-menu-tile">
+            <div id="clear-poly-btn" class="sidebar-section-menu-tile-img"></div>
+            <span>Clear Regions</span>
+          </div>
+          <div class="sidebar-section-menu-tile"></div>
+          <div class="sidebar-section-menu-tile"></div>
+        </div>
+      </div>
     </div>
 
     <div id="chart-sidebar" class="sidebar">
@@ -224,14 +196,16 @@
     </div>
     <div id="drawing-tooltip-bar">
       <div id="drawing-tooltip-bar-content">
-        <p id="drawing-tooltip-select"><b>Drag</b> regions to move them.
-          Press <b>Delete</b> or <b>Backspace</b> to delete a selected region.
+        <p id="drawing-tooltip-select">
+          <b>Drag</b> regions to move them. Press <b>Delete</b> or <b>Backspace</b> to delete a selected region. Press
+          <b>Esc</b> to exit.
+        </p>
+        <p id="drawing-tooltip-box">
+          <b>Draw a box</b> to define a region.<br />
           Press <b>Esc</b> to exit.
         </p>
-        <p id="drawing-tooltip-box"><b>Draw a box</b> to define a region.<br/>
-          Press <b>Esc</b> to exit.
-        </p>
-        <p id="drawing-tooltip-free"><b>Draw a shape</b> to define a region.<br/>
+        <p id="drawing-tooltip-free">
+          <b>Draw a shape</b> to define a region.<br />
           Press <b>Esc</b> to exit.
         </p>
       </div>
@@ -241,47 +215,9 @@
 
     <script>
       $(document).ready(() => {
-        const app = new AppMediator();
-
+        const app = new PandemicTracker();
         window.App = app;
-
-        app.init({
-          overlays: {
-            medical_facilities: [
-              {
-                type: "Hospital",
-                size: 14,
-                fill: "#1f78b4",
-              },
-              {
-                type: "Drive-thru",
-                size: 14,
-                fill: "#a6cee3",
-              },
-              {
-                type: "Testing site",
-                size: 14,
-                fill: "#a6cee3",
-              },
-            ],
-            patients: [
-              {
-                cohort: "COVID-19+",
-                size: 9,
-                fill: "#B92739",
-                "fill-opacity": 0.75,
-                "z-order": 2,
-              },
-              {
-                cohort: "Influenza+",
-                size: 9,
-                fill: "#fb9a99",
-                "fill-opacity": 0.5,
-                "z-order": 1,
-              },
-            ],
-          },
-        });
+        app.init();
       });
     </script>
   </body>
