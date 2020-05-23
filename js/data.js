@@ -30,7 +30,6 @@ class DataLoader {
             return d3.tsv(url)
                 .then(async (file) => {
                     data.patients = file;
-                    data.filtered_patients = file;
 
                     data.patients.forEach(function (p) {
                         p.SAMPLE_COLLECTION_DATE = new Date(p.SAMPLE_COLLECTION_DATE);
@@ -64,6 +63,10 @@ class DataLoader {
                     data.medical_facilities.forEach(function (e) {
                         e.Date = e.Date === "" ? startDate : new Date(e.Date);
                     });
+
+                    // sort so we can efficiently filter by time using binary search
+                    data.medical_facilities.sort((a, b) => compareDates(a.Date, b.Date))
+
 
                     // sanity check on facility types.
                     let rowsWithMissingTypes = data.medical_facilities.filter(d => !Object.keys(App.params.medical_facilities).includes(d.Type));

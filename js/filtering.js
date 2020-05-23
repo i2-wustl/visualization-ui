@@ -50,35 +50,37 @@ const filters = {
         }
     },
     apply: () => {
-        // Filter by map events by date and type
+        let nextDay = getDateAfterDays(App.filters.date,1), // one day after our threshold
+            startIndex = 0,
+            endIndex = binarySearchFirstOccurrence(App.data.medical_facilities, nextDay, (a, b) => compareDates(a.Date, b));
+        if (endIndex < 0) endIndex = -(endIndex+1); // if the date isn't found, convert to insertion index
+        // Filter by medical facilities by date and type
         App.data.filtered_medical_facilities = App.data.medical_facilities
-            .filter(d => (d.Date <= App.filters.date) && App.filters.medicalFacilities.has(d.Type));
+            .slice(startIndex, endIndex) // indices of filtered dates
+            .filter(d => App.filters.medicalFacilities.has(d.Type));
 
         //Filter patients
-        let patients = App.data.patients;
-
-        let nextDay = getDateAfterDays(App.filters.date,1),
-            startIndex = 0,
-            endIndex = binarySearchFirstOccurrence(patients, nextDay, (a, b) => compareDates(a.SAMPLE_COLLECTION_DATE, b)) ;
+        endIndex = binarySearchFirstOccurrence(App.data.patients, nextDay, (a, b) => compareDates(a.SAMPLE_COLLECTION_DATE, b));
         if (endIndex < 0) endIndex = -(endIndex+1);
         // Filter by date and cases
         switch (App.filters.cases) {
             case cases.TOTAL:
                 break;
             case cases.NEW:
-                startIndex = binarySearchFirstOccurrence(patients, App.filters.date, (a, b) => compareDates(a.SAMPLE_COLLECTION_DATE, b), 0, endIndex-1)
+                startIndex = binarySearchFirstOccurrence(App.data.patients, App.filters.date, (a, b) => compareDates(a.SAMPLE_COLLECTION_DATE, b), 0, endIndex-1)
                 break;
             case cases.WITHIN_X_DAYS:
                 let activeThreshold = getDateAfterDays(App.filters.date, -App.filters.withXDaysValue);
-                startIndex = binarySearchFirstOccurrence(patients, activeThreshold, (a, b) => compareDates(a.SAMPLE_COLLECTION_DATE, b), 0, endIndex-1)
+                startIndex = binarySearchFirstOccurrence(App.data.patients, activeThreshold, (a, b) => compareDates(a.SAMPLE_COLLECTION_DATE, b), 0, endIndex-1)
                 break;
             default:
         }
 
-        if (startIndex < 0) startIndex = -(startIndex+1);
-        patients = patients.slice(startIndex, endIndex);
+        if (startIndex < 0) startIndex = -(startIndex+1); // if the date isn't found, convert to insertion index
         // Filter by cohort
-        App.data.filtered_patients = patients.filter(d => App.filters.cohorts.has(d.COHORT));
+        App.data.filtered_patients = App.data.patients
+            .slice(startIndex, endIndex) // indices of filtered dates
+            .filter(d => App.filters.cohorts.has(d.COHORT));
     }
 
 };
