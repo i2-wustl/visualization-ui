@@ -39,6 +39,9 @@ class DataLoader {
                         p.Longitude = Number(p.Longitude);// + (Math.random() - 0.5) * 2e-2;
                     });
 
+                    // sort so we can efficiently filter by time using binary search
+                    data.patients.sort((a, b) => compareDates(a.SAMPLE_COLLECTION_DATE, b.SAMPLE_COLLECTION_DATE))
+
                     //ToDo: create type and cohort overlay configurations with "random" settings for any missing from the configuration
 
                     // sanity check on patient cohorts.

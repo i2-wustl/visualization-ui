@@ -57,21 +57,26 @@ const filters = {
         //Filter patients
         let patients = App.data.patients;
 
+        let nextDay = getDateAfterDays(App.filters.date,1),
+            startIndex = 0,
+            endIndex = binarySearchFirstOccurrence(patients, nextDay, (a, b) => compareDates(a.SAMPLE_COLLECTION_DATE, b)) ;
+        if (endIndex < 0) endIndex = -(endIndex+1);
         // Filter by date and cases
         switch (App.filters.cases) {
             case cases.TOTAL:
-                patients = patients.filter(d => d.SAMPLE_COLLECTION_DATE <= App.filters.date);
                 break;
             case cases.NEW:
-                patients = patients.filter(d => datesAreOnSameDay(d.SAMPLE_COLLECTION_DATE, App.filters.date));
+                startIndex = binarySearchFirstOccurrence(patients, App.filters.date, (a, b) => compareDates(a.SAMPLE_COLLECTION_DATE, b), 0, endIndex-1)
                 break;
             case cases.WITHIN_X_DAYS:
                 let activeThreshold = getDateAfterDays(App.filters.date, -App.filters.withXDaysValue);
-                patients = patients.filter(d => d.SAMPLE_COLLECTION_DATE <= App.filters.date && d.SAMPLE_COLLECTION_DATE > activeThreshold);
+                startIndex = binarySearchFirstOccurrence(patients, activeThreshold, (a, b) => compareDates(a.SAMPLE_COLLECTION_DATE, b), 0, endIndex-1)
                 break;
             default:
         }
 
+        if (startIndex < 0) startIndex = -(startIndex+1);
+        patients = patients.slice(startIndex, endIndex);
         // Filter by cohort
         App.data.filtered_patients = patients.filter(d => App.filters.cohorts.has(d.COHORT));
     }
