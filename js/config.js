@@ -14,33 +14,47 @@ class ConfigLoader {
                 "medical_facilities": [
                     {
                         "type": "Hospital",
-                        "size": 14,
+                        "size": 12,
                         "fill": "#1f78b4"
                     },
                     {
                         "type": "Drive-thru",
-                        "size": 14,
+                        "size": 12,
                         "fill": "#a6cee3"
                     },
                     {
                         "type": "Testing site",
-                        "size": 14,
+                        "size": 12,
                         "fill": "#a6cee3"
                     }
                 ],
                 "patients": [
                     {
                         "cohort": "COVID-19+",
-                        "size": 9,
+                        "size": 7,
                         "fill": "#B92739",
+                        "fill-opacity": 0.75,
+                        "z-order": 4
+                    },
+                    {
+                        "cohort": "COVID-19-",
+                        "size": 6,
+                        "fill": "#fb9a99",
+                        "fill-opacity": 0.75,
+                        "z-order": 3
+                    },
+                    {
+                        "cohort": "Influenza+",
+                        "size": 7,
+                        "fill": "#fb9a99",
                         "fill-opacity": 0.75,
                         "z-order": 2
                     },
                     {
-                        "cohort": "Influenza+",
-                        "size": 9,
-                        "fill": "#fb9a99",
-                        "fill-opacity": 0.5,
+                        "cohort": "Influenza-",
+                        "size": 6,
+                        "fill": "#cab2d6",
+                        "fill-opacity": 0.75,
                         "z-order": 1
                     }
                 ]
