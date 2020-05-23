@@ -31,7 +31,7 @@ class ConfigLoader {
                 "patients": [
                     {
                         "cohort": "COVID-19+",
-                        "size": 7,
+                        "size": 8,
                         "fill": "#B92739",
                         "fill-opacity": 0.75,
                         "z-order": 4
@@ -45,7 +45,7 @@ class ConfigLoader {
                     },
                     {
                         "cohort": "Influenza+",
-                        "size": 7,
+                        "size": 8,
                         "fill": "#fb9a99",
                         "fill-opacity": 0.75,
                         "z-order": 2

@@ -27,7 +27,7 @@
     "patients": [
       {
         "cohort": "COVID-19+",
-        "size": 7,
+        "size": 8,
         "fill": "#B92739",
         "fill-opacity": 0.75,
         "z-order": 4
@@ -41,7 +41,7 @@
       },
       {
         "cohort": "Influenza+",
-        "size": 7,
+        "size": 8,
         "fill": "#6a3d9a",
         "fill-opacity": 0.75,
         "z-order": 2
