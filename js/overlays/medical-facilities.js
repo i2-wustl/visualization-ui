@@ -38,26 +38,46 @@ class MedicalFacilitiesOverlay {
         const svg = d3.select("#map").select("svg");
         const medicalFacilitiesGroup = d3.select(svgGroups.MEDICAL_FACILITIES);
 
-        const t = svg.transition().duration(sliderDragging ? 0 : 250);
+        const t = svg.transition().duration(250);
 
-        medicalFacilitiesGroup.selectAll(svgElements.MEDICAL_FACILITIES_CIRCLES)
-            .data(App.data.filtered_medical_facilities, d => d.ID)
-            .join(
-                enter => enter
-                    .append("circle")
-                    .attr("class", svgElements.MEDICAL_FACILITIES_CIRCLES.substr(1))
-                    .attr("cx", d => d.point.x)
-                    .attr("cy", d => d.point.y)
-                    .attr("r", d => App.params.medical_facilities[d.Type].radius)
-                    .attr("fill", d => App.params.medical_facilities[d.Type].fill)
-                    .attr("fill-opacity", "0.85")
-                    .attr("stroke", "#333333")
-                    .attr("stroke-width", "1px"),
-                update => update,
-                exit => exit.call(circles => circles.transition(t).remove().attr("r", 0))
-            )
-            .call(circles => circles.transition(t)
-                .attr("r", d => App.params.medical_facilities[d.Type].radius));
+        if (sliderDragging) { // don't animate in this case
+            medicalFacilitiesGroup.selectAll(svgElements.MEDICAL_FACILITIES_CIRCLES)
+                .data(App.data.filtered_medical_facilities, d => d.ID)
+                .join(
+                    enter => enter
+                        .append("circle")
+                        .attr("class", svgElements.MEDICAL_FACILITIES_CIRCLES.substr(1))
+                        .attr("cx", d => d.point.x)
+                        .attr("cy", d => d.point.y)
+                        .attr("r", d => App.params.medical_facilities[d.Type].radius)
+                        .attr("fill", d => App.params.medical_facilities[d.Type].fill)
+                        .attr("fill-opacity", "0.85")
+                        .attr("stroke", "#333333")
+                        .attr("stroke-width", "1px"),
+                    update => update,
+                    exit => exit.remove()
+                );
+        } else { // animate
+            medicalFacilitiesGroup.selectAll(svgElements.MEDICAL_FACILITIES_CIRCLES)
+                .data(App.data.filtered_medical_facilities, d => d.ID)
+                .join(
+                    enter => enter
+                        .append("circle")
+                        .attr("class", svgElements.MEDICAL_FACILITIES_CIRCLES.substr(1))
+                        .attr("cx", d => d.point.x)
+                        .attr("cy", d => d.point.y)
+                        .attr("r", 0)
+                        .attr("fill", d => App.params.medical_facilities[d.Type].fill)
+                        .attr("fill-opacity", "0.85")
+                        .attr("stroke", "#333333")
+                        .attr("stroke-width", "1px"),
+                    update => update,
+                    exit => exit.call(circles => circles.transition(t).remove().attr("r", 0))
+                )
+                .call(circles => circles.transition(t)
+                    .attr("r", d => App.params.medical_facilities[d.Type].radius));
+        }
+
     }
 
     raiseGroup = function () {

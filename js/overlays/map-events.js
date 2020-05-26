@@ -35,30 +35,49 @@ class MapEventOverlay {
         const svg = d3.select("#map").select("svg");
         const mapEventGroup = d3.select(svgGroups.MAP_EVENTS);
 
-        const t = svg.transition().duration(sliderDragging ? 0 : 250);
+        const t = svg.transition().duration(250);
 
         const radiusMapEvents = getCircleRadius(App.map.getZoom(), initialRadiusValues.MAP_EVENTS);
         const mapEvents = App.data.filtered_map_events;
 
-        mapEventGroup.selectAll(svgElements.MAP_EVENT_CIRCLES)
-            .data(mapEvents, d => d.ID)
-            .join(
-                enter => enter
-                    .append("circle")
-                    .attr("class", svgElements.MAP_EVENT_CIRCLES.substr(1))
-                    .attr("cx", d => d.point.x)
-                    .attr("cy", d => d.point.y)
-                    .attr("r", 0)
-                    .attr("fill", "#a6cee3")
-                    .attr("fill-opacity", "0.85")
-                    .attr("stroke", "#333333")
-                    .attr("stroke-width", "1px"),
-                update => update,
-                exit => exit.call(circles => circles.transition(t).remove()
-                    .attr("r", 0))
-            )
-            .call(circles => circles.transition(t)
-                .attr("r", radiusMapEvents));
+        if (sliderDragging) { // don't animate in this case
+            mapEventGroup.selectAll(svgElements.MAP_EVENT_CIRCLES)
+                .data(mapEvents, d => d.ID)
+                .join(
+                    enter => enter
+                        .append("circle")
+                        .attr("class", svgElements.MAP_EVENT_CIRCLES.substr(1))
+                        .attr("cx", d => d.point.x)
+                        .attr("cy", d => d.point.y)
+                        .attr("r", radiusMapEvents)
+                        .attr("fill", "#a6cee3")
+                        .attr("fill-opacity", "0.85")
+                        .attr("stroke", "#333333")
+                        .attr("stroke-width", "1px"),
+                    update => update,
+                    exit => exit.remove()
+                );
+        } else { // animate
+            mapEventGroup.selectAll(svgElements.MAP_EVENT_CIRCLES)
+                .data(mapEvents, d => d.ID)
+                .join(
+                    enter => enter
+                        .append("circle")
+                        .attr("class", svgElements.MAP_EVENT_CIRCLES.substr(1))
+                        .attr("cx", d => d.point.x)
+                        .attr("cy", d => d.point.y)
+                        .attr("r", 0)
+                        .attr("fill", "#a6cee3")
+                        .attr("fill-opacity", "0.85")
+                        .attr("stroke", "#333333")
+                        .attr("stroke-width", "1px"),
+                    update => update,
+                    exit => exit.call(circles => circles.transition(t).remove()
+                        .attr("r", 0))
+                )
+                .call(circles => circles.transition(t)
+                    .attr("r", radiusMapEvents));
+        }
     }
     raiseGroup = function () {
         const mapEventGroup = d3.select(svgGroups.MAP_EVENTS);
