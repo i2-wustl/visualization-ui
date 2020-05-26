@@ -69,7 +69,7 @@ class DotDensityOverlay {
         const svg = d3.select("#map").select("svg");
         const patientDotDensityGroup = d3.select(svgGroups.PATIENT_DOT_DENSITY);
 
-        const t = svg.transition().duration(sliderDragging ? 0 : 250);
+        const t = svg.transition().duration(250);
 
         if (this.__isActive) {
             for (const key in App.params.patients) {
@@ -79,23 +79,40 @@ class DotDensityOverlay {
                 const fillOpacity = App.params.patients[key]["fill-opacity"];
                 const radius = App.params.patients[key].radius;
 
-                cohortGroup.selectAll(svgElements.PATIENT_CIRCLES)
-                    .data(cohortPatients, d => d.ID)
-                    .join(
-                        enter => enter
-                            .append("circle")
-                            .attr("class", svgElements.PATIENT_CIRCLES.substr(1))
-                            .attr("cx", d => d.point.x)
-                            .attr("cy", d => d.point.y)
-                            .attr("r", 0)
-                            .attr("fill", fill)
-                            .attr("fill-opacity", fillOpacity),
-                        update => update,
-                        exit => exit.call(circles => circles.transition(t).remove()
-                            .attr("r", 0))
-                    )
-                    .call(circles => circles.transition(t)
-                        .attr("r", radius));
+                if (sliderDragging) { // don't animate in this case
+                    cohortGroup.selectAll(svgElements.PATIENT_CIRCLES)
+                        .data(cohortPatients, d => d.ID)
+                        .join(
+                            enter => enter
+                                .append("circle")
+                                .attr("class", svgElements.PATIENT_CIRCLES.substr(1))
+                                .attr("cx", d => d.point.x)
+                                .attr("cy", d => d.point.y)
+                                .attr("r", radius)
+                                .attr("fill", fill)
+                                .attr("fill-opacity", fillOpacity),
+                            update => update,
+                            exit => exit.remove()
+                        );
+                } else { // animate
+                    cohortGroup.selectAll(svgElements.PATIENT_CIRCLES)
+                        .data(cohortPatients, d => d.ID)
+                        .join(
+                            enter => enter
+                                .append("circle")
+                                .attr("class", svgElements.PATIENT_CIRCLES.substr(1))
+                                .attr("cx", d => d.point.x)
+                                .attr("cy", d => d.point.y)
+                                .attr("r", 0)
+                                .attr("fill", fill)
+                                .attr("fill-opacity", fillOpacity),
+                            update => update,
+                            exit => exit.call(circles => circles.transition(t).remove()
+                                .attr("r", 0))
+                        )
+                        .call(circles => circles.transition(t)
+                            .attr("r", radius));
+                }
             }
 
         }
