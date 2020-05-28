@@ -44,15 +44,16 @@
     <link rel="stylesheet" href="css/map.css" />
   </head>
   <body>
-    <div class="hamburger-container-left">
+    <div id="error-message" style="display: none;"></div>
+    <div class="hamburger-container-left" style="display: none;">
       <button class="hamburger" onclick="openControlPanel()"></button>
     </div>
 
-    <div class="hamburger-container-right">
+    <div class="hamburger-container-right" style="display: none;">
       <button class="hamburger" onclick="openChartPanel()"></button>
     </div>
 
-    <div id="control-sidebar" class="sidebar">
+    <div id="control-sidebar" class="sidebar" style="display: none;">
       <div class="sidebar-header">
         <button class="collapse-left" onclick="closeControlPanel()"></button>
       </div>
@@ -157,7 +158,7 @@
       </div>
     </div>
 
-    <div id="chart-sidebar" class="sidebar">
+    <div id="chart-sidebar" class="sidebar" style="display: none;">
       <div id="sidebar-draggable-right"></div>
       <div class="sidebar-header">
         <button class="collapse-right" onclick="closeChartPanel()"></button>
@@ -181,7 +182,7 @@
       </div>
     </div>
 
-    <div id="timeline">
+    <div id="timeline" style="display: none;">
       <div id="timeline-container">
         <!--<button id="timeline-expand"></button>-->
         <button id="timeline-back-one-day"></button>
@@ -194,7 +195,7 @@
         <button id="timeline-play" class="not-playing"></button>
       </div>
     </div>
-    <div id="drawing-tooltip-bar">
+    <div id="drawing-tooltip-bar" style="display: none;">
       <div id="drawing-tooltip-bar-content">
         <p id="drawing-tooltip-select">
           <b>Drag</b> regions to move them. Press <b>Delete</b> or <b>Backspace</b> to delete a selected region. Press
@@ -212,7 +213,6 @@
     </div>
 
     <div id="map"></div>
-
     <script>
       $(document).ready(() => {
         const app = new PandemicTracker();

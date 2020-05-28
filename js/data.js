@@ -29,6 +29,9 @@ class DataLoader {
         function loadPatients(url) {
             return d3.tsv(url)
                 .then(async (file) => {
+                    if(file.length < 1)
+                        throw new Error("No patient data could be loaded.");
+                        
                     data.patients = file;
 
                     data.patients.forEach(function (p) {
