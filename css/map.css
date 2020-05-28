@@ -1,106 +1,117 @@
 /********************************************************************************/
 /************************************ General ***********************************/
 /********************************************************************************/
-
-body {
-    padding: 0;
-    margin: 0;
+:root {
+  --color-covid: #b92739;
 }
-html, body, #map {
-    height: 100%;
-    width: 100%;
+body {
+  padding: 0;
+  margin: 0;
+}
+html,
+body,
+#map {
+  height: 100%;
+  width: 100%;
 }
 
 button {
-    outline:none;
+  outline: none;
 }
 
 input {
-    outline:none;
+  outline: none;
 }
 
 #map.drawing {
-    cursor: crosshair;
-    /*cursor: url("../img/pen.png") 0 16, auto;*/
+  cursor: crosshair;
+  /*cursor: url("../img/pen.png") 0 16, auto;*/
 }
 
-
+#error-message {
+    color: var(--color-covid);
+    display: flex;
+    vertical-align: middle;
+    width: 100%;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+}
 /********************************************************************************/
 /********************************** General controls ****************************/
 /********************************************************************************/
 
 .hamburger-container-left {
-    position: absolute;
-    left: 10px;
-    top: 5px;
-    z-index: 1;
-    background: white;
-    border-radius: 3px;
-    box-shadow: 2px 2px 5px #999999;
+  position: absolute;
+  left: 10px;
+  top: 5px;
+  z-index: 1;
+  background: white;
+  border-radius: 3px;
+  box-shadow: 2px 2px 5px #999999;
 }
 
 .hamburger-container-right {
-    position: absolute;
-    right: 10px;
-    top: 5px;
-    z-index: 1;
-    background: white;
-    border-radius: 3px;
-    box-shadow: 2px 2px 5px #999999;
+  position: absolute;
+  right: 10px;
+  top: 5px;
+  z-index: 1;
+  background: white;
+  border-radius: 3px;
+  box-shadow: 2px 2px 5px #999999;
 }
 
 .hamburger {
-    background: url("../img/hamburger.png") no-repeat top left;
-    background-size: contain;
-    cursor: pointer;
-    width: 20px;
-    height: 20px;
-    margin: 5px;
-    border: 0px;
+  background: url("../img/hamburger.png") no-repeat top left;
+  background-size: contain;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  margin: 5px;
+  border: 0px;
 }
 
 .hamburger:hover {
-    background: url("../img/hamburger-dark.png") no-repeat top left;
-    background-size: contain;
-    cursor: pointer;
+  background: url("../img/hamburger-dark.png") no-repeat top left;
+  background-size: contain;
+  cursor: pointer;
 }
 
 .collapse-left {
-    background: url("../img/collapse-left.png") no-repeat top left;
-    background-size: contain;
-    cursor: pointer;
-    width: 15px;
-    height: 15px;
-    margin: 10px;
-    border: 0px;
-    position: absolute;
-    right: 0px;
+  background: url("../img/collapse-left.png") no-repeat top left;
+  background-size: contain;
+  cursor: pointer;
+  width: 15px;
+  height: 15px;
+  margin: 10px;
+  border: 0px;
+  position: absolute;
+  right: 0px;
 }
 
 .collapse-left:hover {
-    background: url("../img/collapse-left-dark.png") no-repeat top left;
-    background-size: contain;
-    cursor: pointer;
+  background: url("../img/collapse-left-dark.png") no-repeat top left;
+  background-size: contain;
+  cursor: pointer;
 }
 
 .collapse-right {
-    background: url("../img/collapse-right.png") no-repeat top left;
-    background-size: contain;
-    cursor: pointer;
-    width: 15px;
-    height: 15px;
-    margin: 10px;
-    border: 0px;
-    position: absolute;
-    left: 0px;
+  background: url("../img/collapse-right.png") no-repeat top left;
+  background-size: contain;
+  cursor: pointer;
+  width: 15px;
+  height: 15px;
+  margin: 10px;
+  border: 0px;
+  position: absolute;
+  left: 0px;
 }
 
 .collapse-right:hover {
-    background: url("../img/collapse-right-dark.png") no-repeat top left;
-    background-size: contain;
-    cursor: pointer;
+  background: url("../img/collapse-right-dark.png") no-repeat top left;
+  background-size: contain;
+  cursor: pointer;
 }
-
 
 /********************************************************************************/
 /********************************* Checkbox Toggle ******************************/
@@ -108,442 +119,436 @@ input {
 
 /* The switch - the box around the slider */
 .switch {
-    position: relative;
-    display: inline-block;
-    width: 36px;
-    height: 16px;
-    margin: 0 5px 0 8px;
+  position: relative;
+  display: inline-block;
+  width: 36px;
+  height: 16px;
+  margin: 0 5px 0 8px;
 }
 
 /* Hide default HTML checkbox */
 .switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
+  opacity: 0;
+  width: 0;
+  height: 0;
 }
 
 /* The slider */
 .slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    -webkit-transition: .4s;
-    transition: .4s;
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
 }
 
 .slider:before {
-    position: absolute;
-    content: "";
-    height: 12px;
-    width: 12px;
-    left: 4px;
-    bottom: 2px;
-    background-color: white;
-    -webkit-transition: .4s;
-    transition: .4s;
+  position: absolute;
+  content: "";
+  height: 12px;
+  width: 12px;
+  left: 4px;
+  bottom: 2px;
+  background-color: white;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
 }
 
 input:checked + .slider {
-    background-color: #2196F3;
+  background-color: #2196f3;
 }
 
-input:checked + .covid{
-    background-color: #B92739;
+input:checked + .covid {
+  background-color: #b92739;
 }
 
-input:checked + .ILI{
-    background-color: #fb9a99;
+input:checked + .ILI {
+  background-color: #fb9a99;
 }
 
 input:checked + .slider:before {
-    -webkit-transform: translateX(16px);
-    -ms-transform: translateX(16px);
-    transform: translateX(16px);
+  -webkit-transform: translateX(16px);
+  -ms-transform: translateX(16px);
+  transform: translateX(16px);
 }
 
 /* Rounded sliders */
 .slider.round {
-    border-radius: 34px;
+  border-radius: 34px;
 }
 
 .slider.round:before {
-    border-radius: 50%;
+  border-radius: 50%;
 }
-
-
 
 /********************************************************************************/
 /************************************** Drawing *********************************/
 /********************************************************************************/
 
 #drawing-tooltip-bar {
-    width: 400px;
-    position:absolute;
-    left:50%;
-    top:73px;
-    transform: translate(-50%, 0%);
-    z-index: 13;
-    align-items: center;
-    visibility: hidden;
-    color: white;
-    text-align: center;
-    display: flex;
-    max-height: 0px;
-    transition: all 0.25s ease-in-out;
-    overflow: hidden;
-    background-color: #555555;
-    opacity: 0.7;
-    border-radius: 0px 0px 20px 20px;
+  width: 400px;
+  position: absolute;
+  left: 50%;
+  top: 73px;
+  transform: translate(-50%, 0%);
+  z-index: 13;
+  align-items: center;
+  visibility: hidden;
+  color: white;
+  text-align: center;
+  display: flex;
+  max-height: 0px;
+  transition: all 0.25s ease-in-out;
+  overflow: hidden;
+  background-color: #555555;
+  opacity: 0.7;
+  border-radius: 0px 0px 20px 20px;
 }
 
 #drawing-tooltip-bar-content {
-    padding: 10px 15px 10px 15px;
-    width: 100%;
-    vertical-align: middle;
+  padding: 10px 15px 10px 15px;
+  width: 100%;
+  vertical-align: middle;
 }
 
 #drawing-tooltip-bar-content p {
-    display: none;
-    margin: 0px;
+  display: none;
+  margin: 0px;
 }
-
 
 /********************************************************************************/
 /************************************* Timeline *********************************/
 /********************************************************************************/
 
-#timeline  {
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 2px 2px 5px #999999;
-    position:absolute;
-    left:50%;
-    top:5px;
-    transform: translate(-50%, 0%);
-    z-index: 14;
-    overflow-x: hidden;
-    width: 415px;
-    height: 68px;
-    display: flex;
-    align-items: center;
+#timeline {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 2px 2px 5px #999999;
+  position: absolute;
+  left: 50%;
+  top: 5px;
+  transform: translate(-50%, 0%);
+  z-index: 14;
+  overflow-x: hidden;
+  width: 415px;
+  height: 68px;
+  display: flex;
+  align-items: center;
 }
 
-#timeline-container button, p{
-    display: inline;
+#timeline-container button,
+p {
+  display: inline;
 }
 
-#timeline-container button{
-    border: 0px;
-    top: 50%;
-
+#timeline-container button {
+  border: 0px;
+  top: 50%;
 }
 
 #timeline-play {
-    margin: 5px 5px 5px 8px;
-    width: 20px;
-    height: 20px;
+  margin: 5px 5px 5px 8px;
+  width: 20px;
+  height: 20px;
 }
 
 #timeline-expand {
-    background: url("../img/expand.png") no-repeat top left;
-    background-size: contain;
-    cursor: pointer;
+  background: url("../img/expand.png") no-repeat top left;
+  background-size: contain;
+  cursor: pointer;
 }
 
 #timeline-expand:hover {
-    background: url("../img/expand-dark.png") no-repeat top left;
-    background-size: contain;
-    cursor: pointer;
+  background: url("../img/expand-dark.png") no-repeat top left;
+  background-size: contain;
+  cursor: pointer;
 }
 
 #timeline-back-one-day {
-    background: url("../img/one-day-left.png") no-repeat top left;
-    background-size: contain;
-    height: 15px;
-    width: 15px;
-    cursor: pointer;
-    margin: 0px 1px 0px 2px;
+  background: url("../img/one-day-left.png") no-repeat top left;
+  background-size: contain;
+  height: 15px;
+  width: 15px;
+  cursor: pointer;
+  margin: 0px 1px 0px 2px;
 }
 
 #timeline-back-one-day:hover {
-    background: url("../img/one-day-left-dark.png") no-repeat top left;
-    background-size: contain;
+  background: url("../img/one-day-left-dark.png") no-repeat top left;
+  background-size: contain;
 }
 
 #timeline-forward-one-day {
-    background: url("../img/one-day-right.png") no-repeat top left;
-    background-size: contain;
-    height: 15px;
-    width: 15px;
-    cursor: pointer;
-    margin: 0px 2px 0px 1px;
+  background: url("../img/one-day-right.png") no-repeat top left;
+  background-size: contain;
+  height: 15px;
+  width: 15px;
+  cursor: pointer;
+  margin: 0px 2px 0px 1px;
 }
 
 #timeline-forward-one-day:hover {
-    background: url("../img/one-day-right-dark.png") no-repeat top left;
-    background-size: contain;
+  background: url("../img/one-day-right-dark.png") no-repeat top left;
+  background-size: contain;
 }
 
-.not-playing{
-    background: url("../img/play.png") no-repeat top left;
-    background-size: contain;
-    cursor: pointer;
+.not-playing {
+  background: url("../img/play.png") no-repeat top left;
+  background-size: contain;
+  cursor: pointer;
 }
 
 .not-playing:hover {
-    background: url("../img/play-dark.png") no-repeat top left;
-    background-size: contain;
-    cursor: pointer;
+  background: url("../img/play-dark.png") no-repeat top left;
+  background-size: contain;
+  cursor: pointer;
 }
 
-.playing{
-    background: url("../img/pause.png") no-repeat top left;
-    background-size: contain;
-    cursor: pointer;
+.playing {
+  background: url("../img/pause.png") no-repeat top left;
+  background-size: contain;
+  cursor: pointer;
 }
 
-.playing:hover{
-    background: url("../img/pause-dark.png") no-repeat top left;
-    background-size: contain;
-    cursor: pointer;
+.playing:hover {
+  background: url("../img/pause-dark.png") no-repeat top left;
+  background-size: contain;
+  cursor: pointer;
 }
 
 #timeline-container {
-    display: flex;
-    align-items: center;
-    position: relative;
+  display: flex;
+  align-items: center;
+  position: relative;
 }
 
 #timeline-control-small {
-    display: inline;
-    width: 330px;
-    padding: 0px 5px;
-    text-align:center;
-    border-left: solid 1px #cccccc;
-    border-right: solid 1px #cccccc;
+  display: inline;
+  width: 330px;
+  padding: 0px 5px;
+  text-align: center;
+  border-left: solid 1px #cccccc;
+  border-right: solid 1px #cccccc;
 }
 
 .ticks {
-    font-size: 10px;
+  font-size: 10px;
 }
 
 .track,
 .track-inset,
 .track-progress,
 .track-overlay {
-    stroke-linecap: round;
+  stroke-linecap: round;
 }
 
 .track {
-    stroke: #000;
-    stroke-opacity: 0.3;
-    stroke-width: 8px;
+  stroke: #000;
+  stroke-opacity: 0.3;
+  stroke-width: 8px;
 }
 
 .track-inset {
-    stroke: #dcdcdc;
-    stroke-width: 6px;
+  stroke: #dcdcdc;
+  stroke-width: 6px;
 }
 
 .track-progress {
-    stroke: #999999;
-    stroke-width: 6px;
+  stroke: #999999;
+  stroke-width: 6px;
 }
 
 .track-overlay {
-    pointer-events: stroke;
-    stroke-width: 50px;
-    stroke: transparent;
-    cursor: grab;
+  pointer-events: stroke;
+  stroke-width: 50px;
+  stroke: transparent;
+  cursor: grab;
 }
 
 .handle {
-    fill: #fff;
-    stroke: #000;
-    stroke-opacity: 0.5;
-    stroke-width: 1.25px;
+  fill: #fff;
+  stroke: #000;
+  stroke-opacity: 0.5;
+  stroke-width: 1.25px;
 }
 
 .timeline-event {
-    stroke: #1f78b4;
-    stroke-opacity: 0.7;
-    stroke-width: 4px;
-    stroke-linecap: round;
+  stroke: #1f78b4;
+  stroke-opacity: 0.7;
+  stroke-width: 4px;
+  stroke-linecap: round;
 }
 
 .timeline-event.active {
-    stroke-width: 8px;
+  stroke-width: 8px;
 }
 
 .timeline-event-label {
-    color: #1f78b4;
+  color: #1f78b4;
 }
 
 .timeline-cohort-label {
-    padding: 2px;
+  padding: 2px;
 }
 
 .timeline-cohort-container {
-    margin: 3px;
+  margin: 3px;
 }
 
 .timeline-info-banner {
-    height: 18px;
+  height: 18px;
 }
-
-
 
 /********************************************************************************/
 /****************************** Left sidebar (controls) *************************/
 /********************************************************************************/
 
 .sidebar-header {
-    height:25px;
+  height: 25px;
 }
 
 .sidebar-section {
-    margin: 10px;
-    padding: 10px 0px;
+  margin: 10px;
+  padding: 10px 0px;
 }
 
 .sidebar-section-menu {
-
 }
 
 .sidebar-section-menu-row {
-    font-size: 14px;
-    margin: 5px 0px;
-    display: flex;
-    align-items: center;
+  font-size: 14px;
+  margin: 5px 0px;
+  display: flex;
+  align-items: center;
 }
 
 .sidebar-section-menu-item {
-    font-size: 14px;
-    margin: 5px 0px;
+  font-size: 14px;
+  margin: 5px 0px;
 }
 
-.sidebar-section-menu-row input[type="radio"], input[type="checkbox"]{
-    margin: 0 5px 0 8px;
+.sidebar-section-menu-row input[type="radio"],
+input[type="checkbox"] {
+  margin: 0 5px 0 8px;
 }
 
-.sidebar-section-menu-item input[type="radio"], input[type="checkbox"]{
-    margin: 0 5px 0 8px;
+.sidebar-section-menu-item input[type="radio"],
+input[type="checkbox"] {
+  margin: 0 5px 0 8px;
 }
 
 .sidebar-section-header {
-    color: #222222;
-    border-bottom: 3px solid #cccccc;
+  color: #222222;
+  border-bottom: 3px solid #cccccc;
 }
 
 #control-sidebar {
-    height: 100%;
-    width: 0;
-    position: fixed;
-    z-index: 15;
-    top: 0;
-    left: 0;
-    background-color: white;
-    overflow-x: hidden;
-    transition: 0.1s;
-    box-shadow: 2px 0px 5px #999999;
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 15;
+  top: 0;
+  left: 0;
+  background-color: white;
+  overflow-x: hidden;
+  transition: 0.1s;
+  box-shadow: 2px 0px 5px #999999;
 }
 
 .sidebar-section-menu-tile {
-    margin: 0px auto auto auto;
-    text-align: center;
-    width:83px;
-
+  margin: 0px auto auto auto;
+  text-align: center;
+  width: 83px;
 }
 
 .sidebar-section-menu-tile span {
-    font-size: 12px;
+  font-size: 12px;
 }
 
 .sidebar-section-menu-tile-img {
-    width: 50px;
-    height: 50px;
-    padding: 5px;
-    margin: auto;
-    border: 3px solid #cccccc;
-    border-radius: 10px;
+  width: 50px;
+  height: 50px;
+  padding: 5px;
+  margin: auto;
+  border: 3px solid #cccccc;
+  border-radius: 10px;
 }
 
-
 .sidebar-section-menu-tile-img:hover {
-    border: 3px solid #777777;
+  border: 3px solid #777777;
 }
 
 .sidebar-section-menu-tile-img.active {
-    border: 3px solid #1f78b4;
+  border: 3px solid #1f78b4;
 }
 
 #within-x-days-value {
-    width: 26px;
-    margin: 0px 4px;
+  width: 26px;
+  margin: 0px 4px;
 }
 
 #dot-density-btn {
-    background: url("../img/dot-density.png") no-repeat top left;
-    background-size: contain;
-    cursor: pointer;
+  background: url("../img/dot-density.png") no-repeat top left;
+  background-size: contain;
+  cursor: pointer;
 }
 
 #twod-density-btn {
-    background: url("../img/2d-density.png") no-repeat top left;
-    background-size: contain;
-    cursor: pointer;
+  background: url("../img/2d-density.png") no-repeat top left;
+  background-size: contain;
+  cursor: pointer;
 }
 
 #contours-btn {
-    background: url("../img/contour.png") no-repeat top left;
-    background-size: contain;
-    cursor: pointer;
+  background: url("../img/contour.png") no-repeat top left;
+  background-size: contain;
+  cursor: pointer;
 }
 
 #population-btn {
-    background: url("../img/population-density.png") no-repeat top left;
-    background-size: contain;
-    cursor: pointer;
+  background: url("../img/population-density.png") no-repeat top left;
+  background-size: contain;
+  cursor: pointer;
 }
 
 #income-btn {
-    background: url("../img/income.png") no-repeat top left;
-    background-size: contain;
-    cursor: pointer;
+  background: url("../img/income.png") no-repeat top left;
+  background-size: contain;
+  cursor: pointer;
 }
 
 #hotspot-btn {
-    background: url("../img/hotspot.png") no-repeat top left;
-    background-size: contain;
-    cursor: pointer;
+  background: url("../img/hotspot.png") no-repeat top left;
+  background-size: contain;
+  cursor: pointer;
 }
 
 #draw-box-btn {
-    background: url("../img/draw-box.png") no-repeat top left;
-    background-size: contain;
-    cursor: pointer;
+  background: url("../img/draw-box.png") no-repeat top left;
+  background-size: contain;
+  cursor: pointer;
 }
 
 #select-region-btn {
-    background: url("../img/select-region.png") no-repeat top left;
-    background-size: contain;
-    cursor: pointer;
+  background: url("../img/select-region.png") no-repeat top left;
+  background-size: contain;
+  cursor: pointer;
 }
 
 #clear-poly-btn {
-    background: url("../img/clear-regions.png") no-repeat top left;
-    background-size: contain;
-    cursor: pointer;
+  background: url("../img/clear-regions.png") no-repeat top left;
+  background-size: contain;
+  cursor: pointer;
 }
 
 #free-draw-btn {
-    background: url("../img/free-draw.png") no-repeat top left;
-    background-size: contain;
-    cursor: pointer;
+  background: url("../img/free-draw.png") no-repeat top left;
+  background-size: contain;
+  cursor: pointer;
 }
 
 /********************************************************************************/
@@ -551,51 +556,38 @@ input:checked + .slider:before {
 /********************************************************************************/
 
 #chart-sidebar {
-    height: 100%;
-    width: 0;
-    position: fixed;
-    z-index: 15;
-    top: 0;
-    right: 0;
-    background-color: white;
-    transition: 0.1s;
-    box-shadow: -2px 0px 5px #999999;
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 15;
+  top: 0;
+  right: 0;
+  background-color: white;
+  transition: 0.1s;
+  box-shadow: -2px 0px 5px #999999;
 }
 
 #sidebar-draggable-right {
-    position: absolute;
-    top: 50%;
-    right: 100%;
-    height: 40px;
-    width: 15px;
-    display:block;
-    z-index:15;
-    border-right: 1px solid #D4D4D4;
-    box-shadow: -2px 0px 5px #999999;
-    opacity: 80%;
-    border-top-left-radius: 3px;
-    border-bottom-left-radius: 3px;
-    cursor: grab;
-    background-color: white;
-    background-image: url("../img/expand-left.png");
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 50%;
+  position: absolute;
+  top: 50%;
+  right: 100%;
+  height: 40px;
+  width: 15px;
+  display: block;
+  z-index: 15;
+  border-right: 1px solid #d4d4d4;
+  box-shadow: -2px 0px 5px #999999;
+  opacity: 80%;
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+  cursor: grab;
+  background-color: white;
+  background-image: url("../img/expand-left.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 50%;
 }
 
 .sidebar-section-charts {
-    overflow: scroll;
+  overflow: scroll;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
