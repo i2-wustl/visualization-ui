@@ -157,7 +157,7 @@ class timelineSlider {
                 d3.select(this).classed("active", false);
                 timelineSlider.toggleInfoBanner(true);
             }).on("click", function (d, i) {
-            this.dateSliderUpdate(new Date(d.Date));
+            timelineSlider.dateSliderUpdate(new Date(d.Date));
         });
 
         this.handle = slider.insert("circle", ".track-overlay")
