@@ -68,9 +68,6 @@ class ContoursOverlay {
                 d.point.x >= minPixelX && d.point.x <= maxPixelX && d.point.y >= minPixelY && d.point.y <= maxPixelY
             );
 
-            //patientsOnScreen = patientsOnScreen.slice(0,2);
-            //console.log(patientsOnScreen)
-
             // If we filtered everything, remove any contours that still exist and return.
             // TODO: duplicated code
             if (patientsOnScreen.length === 0) {
