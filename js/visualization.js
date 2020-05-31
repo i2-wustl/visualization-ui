@@ -183,6 +183,11 @@ function projectPoint(x, y) {
     return (App.map.latLngToLayerPoint(new L.latLng(x, y)));
 }
 
+//Todo refactor to importable utilities
+function projectPointInverse(x, y) {
+    return (App.map.layerPointToLatLng(new L.point(x, y)));
+}
+
 //Todo make private function
 function preprocessCoordinatesForZoom() {
     visualization.dotDensity.onPreZoom();
