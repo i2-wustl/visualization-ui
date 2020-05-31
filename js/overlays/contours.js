@@ -40,7 +40,7 @@ class ContoursOverlay {
 
         if (this.__is2dActive || this.__isContoursActive) {
             // Use the data just outside our view for computing the contours
-            let buffer = 50;
+            let buffer = 10;
 
             /*
             There's a lot of coordinate system changes going on here. This are the coordinate systems:
@@ -69,15 +69,8 @@ class ContoursOverlay {
             );
 
             // If we filtered everything, remove any contours that still exist and return.
-            // TODO: duplicated code
             if (patientsOnScreen.length === 0) {
-                contourGroup.selectAll(svgElements.CONTOURS)
-                    .data([])
-                    .join(
-                        enter => enter,
-                        update => update,
-                        exit => exit.remove()
-                    );
+                this.clearContours();
                 return;
             }
 
@@ -190,19 +183,22 @@ class ContoursOverlay {
             d3.select("#" + this.LEGEND_ID).call(legend);
 
         } else {
-            // TODO: don't bother doing this if the contour or 2d-density button wasn't clicked
-            contourGroup.selectAll(svgElements.CONTOURS)
-                .data([])
-                .join(
-                    enter => enter,
-                    update => update,
-                    exit => exit.remove()
-                );
-            d3.select("#legend").style("display", "none");
+            this.clearContours();
         }
 
     }
     raiseGroup = function () {
         d3.selectAll(svgGroups.CONTOURS).raise();
+    }
+
+    clearContours = function () {
+        d3.select(svgGroups.CONTOURS).selectAll(svgElements.CONTOURS)
+            .data([])
+            .join(
+                enter => enter,
+                update => update,
+                exit => exit.remove()
+            );
+        d3.select("#legend").style("display", "none");
     }
 }
