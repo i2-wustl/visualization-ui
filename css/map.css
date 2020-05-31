@@ -591,3 +591,39 @@ input[type="checkbox"] {
 .sidebar-section-charts {
   overflow: scroll;
 }
+
+
+
+
+/********************************************************************************/
+/************************************* Legends **********************************/
+/********************************************************************************/
+
+#legend {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translate(-50%, 0%);
+    z-index: 13;
+    align-items: center;
+    text-align: center;
+    display: none;
+    background: white;
+    border-radius: 5px;
+    border: 1px solid #cccccc;
+    padding: 4px;
+    box-shadow: 2px 2px 5px #999999;
+}
+
+#contourLegend {
+    height: 55px;
+    font-size: 14px;
+}
+
+
+
+
+
+
+
+

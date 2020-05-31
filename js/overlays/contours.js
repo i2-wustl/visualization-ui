@@ -1,42 +1,27 @@
 class ContoursOverlay {
     __is2dActive = false;
     __isContoursActive = false;
-    __getDensityThresholds = (points, cellSize) => {
-        let gridCounts = {};
-    
-        let maxCount = 0;
-        points.forEach(d => {
-            let xIndex = Math.floor(d.pointDensity[0] / cellSize);
-            let yIndex = Math.floor(d.pointDensity[1] / cellSize);
-    
-            if (!(xIndex in gridCounts)) {
-                gridCounts[xIndex] = {}
-            }
-            if (!(yIndex in gridCounts[xIndex])) {
-                gridCounts[xIndex][yIndex] = 0
-            }
-    
-            gridCounts[xIndex][yIndex]++;
-            maxCount = Math.max(maxCount, gridCounts[xIndex][yIndex]);
-        });
-    
-        // WARNING: empirical magic numbers
-        let maxThreshold = Math.log2(maxCount);
-        let maxLogThreshold = Math.floor(maxThreshold);
-        let logThresholds = Array.from(Array(10 + maxLogThreshold * 4).keys());
-        let thresholds = logThresholds.map(x => Math.pow(1.25, x) / 20);
-        thresholds.unshift(0.01);
-    
-        //console.log(maxThreshold, thresholds);
-    
-        return (thresholds);
+
+    get LEGEND_ID() {
+        return "contourLegend";
     }
 
     init = function () {
-        // Pick the SVG from the map object
-        const svg = d3.select("#map").select("svg");
         // Make groups for each type overlay so we can select by them later
-        svg.append("g").attr("id", svgGroups.CONTOURS.substr(1));
+        d3.select("#map").select("svg")
+            .append("g")
+            .attr("id", svgGroups.CONTOURS.substr(1));
+
+        // Make a group to hold the legend
+        let legendSVG = d3.select("#legend")
+            .append("svg")
+            .attr("id", this.LEGEND_ID);
+
+        legendSVG.append("text")
+            .text("Cases per km²")
+            .attr("x","50%")
+            .attr("y","50px")
+            .attr("text-anchor", "middle")
 
         this.__is2dActive = d3.select("#twod-density-btn").classed("active");
         this.__isContoursActive = d3.select("#contours-btn").classed("active");
@@ -83,6 +68,9 @@ class ContoursOverlay {
                 d.point.x >= minPixelX && d.point.x <= maxPixelX && d.point.y >= minPixelY && d.point.y <= maxPixelY
             );
 
+            //patientsOnScreen = patientsOnScreen.slice(0,2);
+            //console.log(patientsOnScreen)
+
             // If we filtered everything, remove any contours that still exist and return.
             // TODO: duplicated code
             if (patientsOnScreen.length === 0) {
@@ -122,20 +110,23 @@ class ContoursOverlay {
             // Maybe you can do better, but is it really worth your time?
             let cellSize = App.map.getZoom() > 11 ? Math.pow(2, App.map.getZoom() - 10) : 2;
             let bandwidth = App.map.getZoom() > 11 ? Math.pow(2, App.map.getZoom() - 10) : 4;
-            let thresholds = this.__getDensityThresholds(patientsOnScreen, cellSize);
 
             // Compute the density data
-            let densityData = d3.contourDensity()
+            let densityData = density()
                 .x(function (d) { return d.pointDensity[0]; })
                 .y(function (d) { return d.pointDensity[1]; })
                 .size([x2densityScale.range()[1], y2densityScale.range()[1]])
                 .cellSize(cellSize)
                 .bandwidth(bandwidth)
-                .thresholds(thresholds)
+                .numThresholds(10)
+                .isLogScale(true)
+                //.maxThresholdValue(1)
                 (patientsOnScreen);
 
+            let thresholds = [];
             // Translate the contours back to pixel coordinates used by leaflet
             densityData.forEach(threshold => {
+                thresholds.push(threshold.value)
                 threshold.coordinates.forEach(contour => {
                     contour.forEach(subcontour => {
                         subcontour.forEach(point => {
@@ -146,11 +137,8 @@ class ContoursOverlay {
                 })
             });
 
-            // Remove empty contours
-            densityData = densityData.filter(d => d.coordinates.length > 0);
-
             // Prepare a color palette
-            const color = d3.scaleSequential([0, densityData.length + 2], d3.interpolateYlGnBu);
+            const color = d3.scaleSequential([0, densityData.length], d3.interpolateYlGnBu);
 
             // Draw the contours. They are already in the leaflet coordinates so we use d3.geoPath() without any
             // projection function.
@@ -179,10 +167,30 @@ class ContoursOverlay {
             }
             if (this.__is2dActive) {
                 densityPath
-                    .attr("fill", (d, i) => color(i === 0 ? 0 : i + 2))
+                    .attr("fill", (d, i) => color(i))
                     .attr("fill-opacity", 0.7)
             }
 
+            let minLatLng = projectPointInverse(minX, minY);
+            let nextLatLng = projectPointInverse(minX+1, minY);
+            minLatLng = turf.point([minLatLng.lng, minLatLng.lat]);
+            nextLatLng = turf.point([nextLatLng.lng, nextLatLng.lat]);
+
+            let distPerPixel = turf.distance(minLatLng, nextLatLng);
+            let pixelsPerKm = 1 / distPerPixel;
+            let correctionFactor = Math.pow(pixelsPerKm, 2);
+
+            let legend = d3.legendColor()
+                .shapeWidth((300.0/thresholds.length) - 3)
+                .shapePadding(3)
+                .cells(Array.from(Array(thresholds.length).keys()))
+                .labels(thresholds.map(x => (x * correctionFactor).toFixed(1)))
+                .orient('horizontal')
+                .scale(color);
+
+            d3.select("#legend").style("display", "flex");
+
+            d3.select("#" + this.LEGEND_ID).call(legend);
 
         } else {
             // TODO: don't bother doing this if the contour or 2d-density button wasn't clicked
@@ -193,6 +201,7 @@ class ContoursOverlay {
                     update => update,
                     exit => exit.remove()
                 );
+            //d3.select("#legend").style("display", "none");
         }
 
     }

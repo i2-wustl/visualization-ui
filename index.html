@@ -6,8 +6,11 @@
 
     <!-- d3 -->
     <script src="https://d3js.org/d3.v5.min.js"></script>
+    <!-- for performance profiling -->
+    <!--<script src="ext/d3.js"></script>-->
     <script src="https://d3js.org/d3-geo.v1.min.js"></script>
     <script src="https://d3js.org/topojson.v1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.min.js"></script>
 
     <!-- leaflet -->
     <link rel="stylesheet" href="https://d19vzq90twjlae.cloudfront.net/leaflet-0.7/leaflet.css" />
@@ -39,6 +42,7 @@
     <script src="js/overlays/drawing.js"></script>
     <script src="js/visualization.js"></script>
     <script src="js/drawing.js"></script>
+    <script src="js/density.js"></script>
     <script src="js/charts.js"></script>
     <script src="js/app.js"></script>
     <link rel="stylesheet" href="css/map.css" />
@@ -211,6 +215,8 @@
         </p>
       </div>
     </div>
+
+    <div id="legend"></div>
 
     <div id="map"></div>
     <script>
