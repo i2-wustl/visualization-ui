@@ -100,7 +100,6 @@ function initializeMap() {
     App.map.on('zoomend', onZoomComplete);
     // recompute contours when map is done panning
     App.map.on('moveend', onPanComplete);
-
 }
 
 
@@ -109,10 +108,11 @@ function initializeMap() {
  ****************************** Visualization - Events ***************************
  ********************************************************************************/
 
-
-
 function onPanComplete() {
-    visualization.contours.refresh();
+    if (!App.zooming) {
+        visualization.contours.refresh();
+    }
+    App.zooming = false;
 }
 
 function onZoomStart() {
@@ -127,7 +127,6 @@ function onZoomComplete() {
     visualization.drawing.onZoomComplete();
     visualization.contours.refresh();
     visualization.sidebar.refresh();
-    App.zooming = false;
 }
 
 function onFilterChanged(sliderDragging = false) {
