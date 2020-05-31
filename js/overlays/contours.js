@@ -18,7 +18,7 @@ class ContoursOverlay {
             .attr("id", this.LEGEND_ID);
 
         legendSVG.append("text")
-            .text("Cases per km²")
+            .text("Cases / km²")
             .attr("x","50%")
             .attr("y","50px")
             .attr("text-anchor", "middle")
