@@ -85,6 +85,7 @@ function initializeMap() {
     };
 
     L.control.layers(null, baseLayers, { position: 'bottomleft'}).addTo(App.map);
+    L.control.scale( {position: 'bottomleft'}).addTo(App.map);
 
     // Initialize SVG layer
     App.map._initPathRoot();
