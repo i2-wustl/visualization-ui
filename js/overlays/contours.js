@@ -201,7 +201,7 @@ class ContoursOverlay {
                     update => update,
                     exit => exit.remove()
                 );
-            //d3.select("#legend").style("display", "none");
+            d3.select("#legend").style("display", "none");
         }
 
     }
