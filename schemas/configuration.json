@@ -1,0 +1,400 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "http://example.com/example.json",
+    "type": "object",
+    "title": "The root schema",
+    "description": "The root schema comprises the entire JSON document.",
+    "default": {},
+    "examples": [
+        {
+            "data": {
+                "files": {
+                    "timeline_events": "data/timeline-events.csv",
+                    "patients": "data/patients.tsv",
+                    "medical_facilities": "data/medical-facilities.csv"
+                }
+            },
+            "overlays": {
+                "medical_facilities": [
+                    {
+                        "type": "Hospital",
+                        "size": 12,
+                        "fill": "#1f78b4"
+                    },
+                    {
+                        "type": "Drive-thru",
+                        "size": 12,
+                        "fill": "#a6cee3"
+                    },
+                    {
+                        "type": "Testing site",
+                        "size": 12,
+                        "fill": "#a6cee3"
+                    }
+                ],
+                "patients": [
+                    {
+                        "cohort": "COVID-19+",
+                        "size": 8,
+                        "fill": "#B92739",
+                        "fill-opacity": 0.75,
+                        "z-order": 4
+                    },
+                    {
+                        "cohort": "COVID-19-",
+                        "size": 6,
+                        "fill": "#fb9a99",
+                        "fill-opacity": 0.75,
+                        "z-order": 3
+                    },
+                    {
+                        "cohort": "Influenza+",
+                        "size": 8,
+                        "fill": "#6a3d9a",
+                        "fill-opacity": 0.75,
+                        "z-order": 2
+                    },
+                    {
+                        "cohort": "Influenza-",
+                        "size": 6,
+                        "fill": "#cab2d6",
+                        "fill-opacity": 0.75,
+                        "z-order": 1
+                    }
+                ]
+            }
+        }
+    ],
+    "required": [
+        "data",
+        "overlays"
+    ],
+    "additionalProperties": true,
+    "properties": {
+        "data": {
+            "$id": "#/properties/data",
+            "type": "object",
+            "title": "The data schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": {},
+            "examples": [
+                {
+                    "files": {
+                        "timeline_events": "data/timeline-events.csv",
+                        "patients": "data/patients.tsv",
+                        "medical_facilities": "data/medical-facilities.csv"
+                    }
+                }
+            ],
+            "required": [
+                "files"
+            ],
+            "additionalProperties": true,
+            "properties": {
+                "files": {
+                    "$id": "#/properties/data/properties/files",
+                    "type": "object",
+                    "title": "The files schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": {},
+                    "examples": [
+                        {
+                            "timeline_events": "data/timeline-events.csv",
+                            "patients": "data/patients.tsv",
+                            "medical_facilities": "data/medical-facilities.csv"
+                        }
+                    ],
+                    "required": [
+                        "timeline_events",
+                        "patients",
+                        "medical_facilities"
+                    ],
+                    "additionalProperties": true,
+                    "properties": {
+                        "timeline_events": {
+                            "$id": "#/properties/data/properties/files/properties/timeline_events",
+                            "type": "string",
+                            "title": "The timeline_events schema",
+                            "description": "An explanation about the purpose of this instance.",
+                            "default": "",
+                            "examples": [
+                                "data/timeline-events.csv"
+                            ]
+                        },
+                        "patients": {
+                            "$id": "#/properties/data/properties/files/properties/patients",
+                            "type": "string",
+                            "title": "The patients schema",
+                            "description": "An explanation about the purpose of this instance.",
+                            "default": "",
+                            "examples": [
+                                "data/patients.tsv"
+                            ]
+                        },
+                        "medical_facilities": {
+                            "$id": "#/properties/data/properties/files/properties/medical_facilities",
+                            "type": "string",
+                            "title": "The medical_facilities schema",
+                            "description": "An explanation about the purpose of this instance.",
+                            "default": "",
+                            "examples": [
+                                "data/medical-facilities.csv"
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "overlays": {
+            "$id": "#/properties/overlays",
+            "type": "object",
+            "title": "The overlays schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": {},
+            "examples": [
+                {
+                    "medical_facilities": [
+                        {
+                            "type": "Hospital",
+                            "size": 12,
+                            "fill": "#1f78b4"
+                        },
+                        {
+                            "type": "Drive-thru",
+                            "size": 12,
+                            "fill": "#a6cee3"
+                        },
+                        {
+                            "type": "Testing site",
+                            "size": 12,
+                            "fill": "#a6cee3"
+                        }
+                    ],
+                    "patients": [
+                        {
+                            "cohort": "COVID-19+",
+                            "size": 8,
+                            "fill": "#B92739",
+                            "fill-opacity": 0.75,
+                            "z-order": 4
+                        },
+                        {
+                            "cohort": "COVID-19-",
+                            "size": 6,
+                            "fill": "#fb9a99",
+                            "fill-opacity": 0.75,
+                            "z-order": 3
+                        },
+                        {
+                            "cohort": "Influenza+",
+                            "size": 8,
+                            "fill": "#6a3d9a",
+                            "fill-opacity": 0.75,
+                            "z-order": 2
+                        },
+                        {
+                            "cohort": "Influenza-",
+                            "size": 6,
+                            "fill": "#cab2d6",
+                            "fill-opacity": 0.75,
+                            "z-order": 1
+                        }
+                    ]
+                }
+            ],
+            "required": [
+                "medical_facilities",
+                "patients"
+            ],
+            "additionalProperties": true,
+            "properties": {
+                "medical_facilities": {
+                    "$id": "#/properties/overlays/properties/medical_facilities",
+                    "type": "array",
+                    "title": "The medical_facilities schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": [],
+                    "examples": [
+                        [
+                            {
+                                "type": "Hospital",
+                                "size": 12,
+                                "fill": "#1f78b4"
+                            },
+                            {
+                                "type": "Drive-thru",
+                                "size": 12,
+                                "fill": "#a6cee3"
+                            }
+                        ]
+                    ],
+                    "additionalItems": true,
+                    "items": {
+                        "anyOf": [
+                            {
+                                "$id": "#/properties/overlays/properties/medical_facilities/items/anyOf/0",
+                                "type": "object",
+                                "title": "The first anyOf schema",
+                                "description": "An explanation about the purpose of this instance.",
+                                "default": {},
+                                "examples": [
+                                    {
+                                        "type": "Hospital",
+                                        "size": 12,
+                                        "fill": "#1f78b4"
+                                    }
+                                ],
+                                "required": [
+                                    "type",
+                                    "size",
+                                    "fill"
+                                ],
+                                "additionalProperties": true,
+                                "properties": {
+                                    "type": {
+                                        "$id": "#/properties/overlays/properties/medical_facilities/items/anyOf/0/properties/type",
+                                        "type": "string",
+                                        "title": "The type schema",
+                                        "description": "An explanation about the purpose of this instance.",
+                                        "default": "",
+                                        "examples": [
+                                            "Hospital"
+                                        ]
+                                    },
+                                    "size": {
+                                        "$id": "#/properties/overlays/properties/medical_facilities/items/anyOf/0/properties/size",
+                                        "type": "integer",
+                                        "title": "The size schema",
+                                        "description": "An explanation about the purpose of this instance.",
+                                        "default": 0,
+                                        "examples": [
+                                            12
+                                        ]
+                                    },
+                                    "fill": {
+                                        "$id": "#/properties/overlays/properties/medical_facilities/items/anyOf/0/properties/fill",
+                                        "type": "string",
+                                        "title": "The fill schema",
+                                        "description": "An explanation about the purpose of this instance.",
+                                        "default": "",
+                                        "examples": [
+                                            "#1f78b4"
+                                        ]
+                                    }
+                                }
+                            }
+                        ],
+                        "$id": "#/properties/overlays/properties/medical_facilities/items"
+                    }
+                },
+                "patients": {
+                    "$id": "#/properties/overlays/properties/patients",
+                    "type": "array",
+                    "title": "The patients schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": [],
+                    "examples": [
+                        [
+                            {
+                                "cohort": "COVID-19+",
+                                "size": 8,
+                                "fill": "#B92739",
+                                "fill-opacity": 0.75,
+                                "z-order": 4
+                            },
+                            {
+                                "cohort": "COVID-19-",
+                                "size": 6,
+                                "fill": "#fb9a99",
+                                "fill-opacity": 0.75,
+                                "z-order": 3
+                            }
+                        ]
+                    ],
+                    "additionalItems": true,
+                    "items": {
+                        "anyOf": [
+                            {
+                                "$id": "#/properties/overlays/properties/patients/items/anyOf/0",
+                                "type": "object",
+                                "title": "The first anyOf schema",
+                                "description": "An explanation about the purpose of this instance.",
+                                "default": {},
+                                "examples": [
+                                    {
+                                        "cohort": "COVID-19+",
+                                        "size": 8,
+                                        "fill": "#B92739",
+                                        "fill-opacity": 0.75,
+                                        "z-order": 4
+                                    }
+                                ],
+                                "required": [
+                                    "cohort",
+                                    "size",
+                                    "fill",
+                                    "fill-opacity",
+                                    "z-order"
+                                ],
+                                "additionalProperties": true,
+                                "properties": {
+                                    "cohort": {
+                                        "$id": "#/properties/overlays/properties/patients/items/anyOf/0/properties/cohort",
+                                        "type": "string",
+                                        "title": "The cohort schema",
+                                        "description": "An explanation about the purpose of this instance.",
+                                        "default": "",
+                                        "examples": [
+                                            "COVID-19+"
+                                        ]
+                                    },
+                                    "size": {
+                                        "$id": "#/properties/overlays/properties/patients/items/anyOf/0/properties/size",
+                                        "type": "integer",
+                                        "title": "The size schema",
+                                        "description": "An explanation about the purpose of this instance.",
+                                        "default": 0,
+                                        "examples": [
+                                            8
+                                        ]
+                                    },
+                                    "fill": {
+                                        "$id": "#/properties/overlays/properties/patients/items/anyOf/0/properties/fill",
+                                        "type": "string",
+                                        "title": "The fill schema",
+                                        "description": "An explanation about the purpose of this instance.",
+                                        "default": "",
+                                        "examples": [
+                                            "#B92739"
+                                        ]
+                                    },
+                                    "fill-opacity": {
+                                        "$id": "#/properties/overlays/properties/patients/items/anyOf/0/properties/fill-opacity",
+                                        "type": "number",
+                                        "title": "The fill-opacity schema",
+                                        "description": "An explanation about the purpose of this instance.",
+                                        "default": 0.0,
+                                        "examples": [
+                                            0.75
+                                        ]
+                                    },
+                                    "z-order": {
+                                        "$id": "#/properties/overlays/properties/patients/items/anyOf/0/properties/z-order",
+                                        "type": "integer",
+                                        "title": "The z-order schema",
+                                        "description": "An explanation about the purpose of this instance.",
+                                        "default": 0,
+                                        "examples": [
+                                            4
+                                        ]
+                                    }
+                                }
+                            }
+                        ],
+                        "$id": "#/properties/overlays/properties/patients/items"
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,4 +1,5 @@
 {
+  "$schema": "./schemas/configuration.json",
   "data": {
     "files": {
       "timeline_events": "data/timeline-events.csv",
