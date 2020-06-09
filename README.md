@@ -6,15 +6,15 @@
 
 ### Overview
 
-Running the application on your website can be as simple as copying the contents of this repository to a directory within your website's root directory. Then simply link to the `index.html` page in the new directory to launch the application. You will also need to copy the data files into the `data` directory to enable the application's visualizations to work.
+Running the application on your website can be as simple as copying the contents of this repository to a directory within your website's root directory. Then simply link to the `index.html` page in the new directory to launch the application. You will also need to copy the data files into the `data` directory to enable the application's visualizations to work. For information regarding the data dictionary used by this application please refer to the [Data Schema Documentation](schemas/data-schema.md).
 
 ### Details
 
-There are a few things to consider before deploying this application. The purpose of this application is to visualize data that is considered PHI. Steps need to be taken to ensure the deployment of this application is in compliance with your organizations policies and all HIPAA regulations. We highly recommend only hosting this application using HTTPS even if it is hosted internally.
+There are a few things to consider before deploying this application. The purpose of this application is to visualize data that is considered PHI. Steps need to be taken to ensure the deployment of this application complies with your organization's policies and all HIPAA regulations. We highly recommend only hosting this application using HTTPS even if it is hosted internally.
 
-By default, this application provides no authentication, authorization or auditing functionality. These aspects of compliance must be handled outside of the application. For example, this could be done implementing authentication and auditing using features at the webserver level.
+By default, this application provides no authentication, authorization, or auditing functionality. These aspects of compliance must be handled outside of the application. For example, this could be done by implementing authentication and auditing using features at the webserver level.
 
-We have taken the approach of wrapping this application inside of an aspnet core website that handles authorizing and logging user access. The code for the aspnet site can be found in the [COVID-19 Visualization repository](https://github.com/i2-wustl/covid19-visualization). This same pattern could be implemented using any server side hosting platform such as NodeJS, python, php etc. The implementation of this pattern on each platform will look slightly different and is outside the scope of this document.
+We have taken the approach of wrapping this application inside of an aspnet core website that handles authorizing and logging user access. The code for the aspnet site can be found in the [COVID-19 Visualization repository](https://github.com/i2-wustl/covid19-visualization). This same pattern could be implemented using any server side hosting platform such as NodeJS, Python, PHP etc. The implementation of this pattern on each platform will look slightly different and is outside the scope of this document.
 
 Follow these steps to deploy the application to your webserver.
 
@@ -47,13 +47,13 @@ Please refer to the [Data Schema Documentation](schemas/data-schema.md) for deta
 
 ### Overlays
 
-Multiple visual overlays are displayed on the map by the application. Each of these overlays have an independent configuration for things like color, size and various other properties. There are two main types of overlays in the application: `medical_facilities` and `patients`.
+Multiple visual overlays are displayed on the map by the application. Each of these overlays has an independent configuration for things like color, size, and various other properties. There are two main types of overlays in the application: `medical_facilities` and `patients`.
 
 #### medical_facilities
 
 Medical facility overlays support the following properties:
 
-- `type`: the category or type of facility such as Hospital, Drive-thru or Testing site. The values available to this property are determined by the values in the `medical_facilities.csv` file.
+- `type`: the category or type of facility such as Hospital, Drive-thru, or Testing site. The values available to this property are determined by the values in the `medical_facilities.csv` file.
 - `size`: the size in px units of the overlay circle
 - `fill`: the CSS color value to the overlay circle
 
@@ -71,13 +71,13 @@ Patient overlays support the following properties:
 
 ### Additional Information
 
-The `config.json` file can also be generated dynamically via a server side technology to support advanced scenarios. An example would be generating a unique `config.json` file for the currently logged in user. This could enable features like user customized overlay colors or loading different data files depending on custom authorization policies.
+The `config.json` file can also be generated dynamically via a server-side technology to support advanced scenarios. An example would be generating a unique `config.json` file for the currently logged-in user. This could enable features like user-customized overlay colors or loading different data files depending on custom authorization policies.
 
 As long as the response conforms to the `schemas/configuration.json` file, the application should load the dynamic configuration as if it was the static file provided with the application.
 
-The implementation of this scenario will vary depending on server side technologies. However, the concept is to remove the static `config.json` file and intercept the request via some server side logic. In an MVC style application this would mean, adding a route for the `config.json` to a controller that returns a dynamically generated JSON response.
+The implementation of this scenario will vary depending on server-side technologies. However, the concept is to remove the static `config.json` file and intercept the request via some server-side logic. In an MVC style application, this would mean, adding a route for the `config.json` to a controller that returns a dynamically generated JSON response.
 
-Similarly, dynamic datasets can also be utilized. By using this same pattern, we can leverage a server side technology to intercept the requests for the data files and return dynamically generated CSV and TSV files instead.
+Similarly, dynamic datasets can also be utilized. By using this same pattern, we can leverage a server-side technology to intercept the requests for the data files and return dynamically generated CSV and TSV files instead.
 
 Just as the dynamic configuration file must conform to the provided JSON schema, the data files must also conform to the appropriate data schema. The details on these schemas can be the [Data Schema Documentation](schemas/data-schema.md).
 
