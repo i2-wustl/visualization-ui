@@ -29,13 +29,13 @@ input {
 }
 
 #error-message {
-    color: var(--color-covid);
-    display: flex;
-    vertical-align: middle;
-    width: 100%;
-    height: 100vh;
-    align-items: center;
-    justify-content: center;
+  color: var(--color-covid);
+  display: flex;
+  vertical-align: middle;
+  width: 100%;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
 }
 /********************************************************************************/
 /********************************** General controls ****************************/
@@ -411,6 +411,11 @@ p {
   height: 25px;
 }
 
+.sidebar-footer {
+  position: absolute;
+  bottom: 0;
+}
+
 .sidebar-section {
   margin: 10px;
   padding: 10px 0px;
@@ -592,38 +597,27 @@ input[type="checkbox"] {
   overflow: scroll;
 }
 
-
-
-
 /********************************************************************************/
 /************************************* Legends **********************************/
 /********************************************************************************/
 
 #legend {
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translate(-50%, 0%);
-    z-index: 13;
-    align-items: center;
-    text-align: center;
-    display: none;
-    background: white;
-    border-radius: 5px;
-    border: 1px solid #cccccc;
-    padding: 4px;
-    box-shadow: 2px 2px 5px #999999;
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translate(-50%, 0%);
+  z-index: 13;
+  align-items: center;
+  text-align: center;
+  display: none;
+  background: white;
+  border-radius: 5px;
+  border: 1px solid #cccccc;
+  padding: 4px;
+  box-shadow: 2px 2px 5px #999999;
 }
 
 #contourLegend {
-    height: 55px;
-    font-size: 14px;
+  height: 55px;
+  font-size: 14px;
 }
-
-
-
-
-
-
-
-
