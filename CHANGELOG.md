@@ -8,7 +8,15 @@ All notable changes to this project will be documented in this file.
 
 ### Initial Release
 
-- Map visualization
+- This release comprises all of the previous builds and contains the original feature set of the application. These features include:
+
+  - Map visualization
+  - Patient cohort map overlays
+  - Medical facility map overlays
+  - Timeline events
+  - Various charts corresponding to regional data
+
+- Future releases of the application will use semantic versioning starting from this release as the first major.
 
 ## Additional Information
 

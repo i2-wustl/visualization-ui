@@ -8,7 +8,9 @@ const ui = {
 };
 
 function initializeControls() {
-    document.querySelector('#version').innerHTML = App.params.version;
+    document.querySelector('#app-version').innerHTML = App.params.appVersion;
+    document.querySelector('#data-version').innerHTML = App.params.dataVersion;
+
     createMedicalFacilityFilters();
     createPatientCohortFilters();
 
