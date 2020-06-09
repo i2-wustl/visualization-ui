@@ -8,7 +8,7 @@ const ui = {
 };
 
 function initializeControls() {
-
+    document.querySelector('#version').innerHTML = App.params.version;
     createMedicalFacilityFilters();
     createPatientCohortFilters();
 
@@ -53,7 +53,7 @@ function createPatientCohortFilters() {
 
     for (const key in App.params.patients) {
         let rowDiv = cohortDiv.append("div").attr("class", "sidebar-section-menu-row")
-        let label = rowDiv .append("label").attr("class", "switch");
+        let label = rowDiv.append("label").attr("class", "switch");
 
         let input = label.append("input")
             .attr("type", "checkbox")
@@ -83,7 +83,7 @@ function createMedicalFacilityFilters() {
 
     for (const key in App.params.medical_facilities) {
         let rowDiv = facilityDiv.append("div").attr("class", "sidebar-section-menu-row")
-        let label = rowDiv .append("label").attr("class", "switch");
+        let label = rowDiv.append("label").attr("class", "switch");
 
         let input = label.append("input")
             .attr("type", "checkbox")
@@ -97,11 +97,11 @@ function createMedicalFacilityFilters() {
             .style("background-color", App.params.medical_facilities[key].fill);
 
         input.on("change", function () {
-                if (d3.select(this).property('checked')) span.style("background-color", App.params.medical_facilities[key].fill);
-                else span.style("background-color", "#ccc");
+            if (d3.select(this).property('checked')) span.style("background-color", App.params.medical_facilities[key].fill);
+            else span.style("background-color", "#ccc");
 
-                filters.toggleMedicalFacilities(key, d3.select(this).property('checked'));
-            });
+            filters.toggleMedicalFacilities(key, d3.select(this).property('checked'));
+        });
 
         rowDiv.append("span").text(key);
     }
