@@ -67,6 +67,13 @@ class ConfigLoader {
                     ...defaultConfig
                 };
 
+                const response = await fetch('package.json');
+                console.log('loading package');
+                if (response.ok) {
+                    const json = await response.json();
+                    input.version = json.version;
+                }
+
                 mergeConfig(input, config);
 
                 // Object.assign(input, defaultConfig, config ?? {});
@@ -77,6 +84,7 @@ class ConfigLoader {
         function mergeConfig(target, source) {
             if (source != null) {
 
+                target.version = source.version || (target.version || null);
                 //Allow override to null
                 //if (source.url)
                 target.url = source.url;
