@@ -79,6 +79,8 @@ class ConfigLoader {
                 if (response.ok) {
                     const text = await response.text();
                     input.dataVersion = text;
+                } else {
+                    input.dataVersion = 'No version found';
                 }
 
                 mergeConfig(input, config);
