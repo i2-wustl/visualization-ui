@@ -20,7 +20,7 @@ Follow these steps to deploy the application to your webserver.
 
 1. Download the application code. This can be done by cloning the repository or downloading the code as a zip file from GitHub. If you downloaded the zip file, you will also need to extract the contents to a local directory.
 
-2. Copy the code to a directory that has been configured to be served via a web server. This can be a dedicated website or a directory under an existing website. The webserver should be configured to allow the following file types: HTML, CSS, JS, JSON, CSV, TSV, PNG
+2. Copy the code to a directory that has been configured to be served via a web server. This can be a dedicated website or a directory under an existing website. The web server should be configured to allow the following file types: HTML, CSS, JS, JSON, CSV, TSV, PNG
 
 3. Data files will need to be placed either in the `data` directory or in a location that can be accessed via a relative URL such as: `protected-files/patients.tsv`. If the file URLs will not match the default values, the `config.json` file will need to be updated to the new URLs. More information can be found in the Configuration section of this document.
 
