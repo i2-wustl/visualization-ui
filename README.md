@@ -30,9 +30,10 @@ Once these steps have been completed successfully the application should be func
 
 All configuration settings for the application are contained in the `config.json` file. This file conforms to the JSON schema located in the `schemas/configuration.json` file. Technical details and examples of the structure of this JSON configuration can be found in that document.
 
-There are two main configuration sections in this file.
+The configuration sections in this file are:
 
 - `data`: contains the `files` object with properties to hold the relative path to the data files
+- `map`: contains the settings for the map visualization
 - `overlays`: contains the UI configuration for the medical facility and patient visualizations
 
 ### Data
@@ -44,6 +45,13 @@ The application requires three data files to enable all features. These files ar
 - `medical_facilities`: a CSV file containing the information regarding a facility's location and type
 
 Please refer to the [Data Schema Documentation](schemas/data-schema.md) for details on the format of each of these files.
+
+### Map
+
+The map currently exposes these settings:
+
+- `zoom`: The starting zoom level of the map. The default value is `7`.
+- `center`: The latitude and longitude to center the map provided as a numeric array. The default value is `[38.637587, -90.262347]`.
 
 ### Overlays
 

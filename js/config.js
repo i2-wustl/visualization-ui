@@ -102,6 +102,9 @@ class ConfigLoader {
                 if (source.data)
                     target.data = source.data;
 
+                if (source.map)
+                    target.map = source.map;
+                    
                 if (target.overlays == null)
                     target.overlays = {};
 
