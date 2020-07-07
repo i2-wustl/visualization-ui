@@ -133,6 +133,39 @@
         }
       }
     },
+    "map": {
+      "$id": "#/properties/map",
+      "type": "object",
+      "title": "The map configuration",
+      "description": "The map currently support settings for the start center point of the map and the default zoom level.",
+      "default": {
+        "zoom": 7,
+        "center": [38.637587, -90.262347]
+      },
+      "examples": [
+        {
+          "zoom": 7,
+          "center": [38.637587, -90.262347]
+        }
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "zoom": {
+          "$id": "#/properties/map/properties/zoom",
+          "type": "number",
+          "title": "Zoom Level",
+          "description": "The default zoom level of the map",
+          "default": 7
+        },
+        "center": {
+          "$id": "#/properties/map/properties/center",
+          "type": "array",
+          "title": "Map Center",
+          "description": "The default center point of the map",
+          "default": [38.637587, -90.262347]
+        }
+      }
+    },
     "overlays": {
       "$id": "#/properties/overlays",
       "type": "object",

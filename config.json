@@ -7,6 +7,13 @@
       "medical_facilities": "data/medical-facilities.csv"
     }
   },
+  "map": {
+    "zoom": 7,
+    "center": [
+      38.637587,
+      -90.262347
+    ]
+  },
   "overlays": {
     "medical_facilities": [
       {
