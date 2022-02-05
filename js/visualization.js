@@ -58,11 +58,11 @@ function initializeMap() {
     const mbAttr = 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
         '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
         'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-        mbUrl = 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZWUyZGV2IiwiYSI6ImNqaWdsMXJvdTE4azIzcXFscTB1Nmcwcm4ifQ.hECfwyQtM7RtkBtydKpc5g';
+        mbUrl = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiZWUyZGV2IiwiYSI6ImNqaWdsMXJvdTE4azIzcXFscTB1Nmcwcm4ifQ.hECfwyQtM7RtkBtydKpc5g';
 
-    const grayscale = L.tileLayer(mbUrl, { id: 'mapbox.light', attribution: mbAttr }),
-        satellite = L.tileLayer(mbUrl, { id: 'mapbox.satellite', attribution: mbAttr }),
-        streets = L.tileLayer(mbUrl, { id: 'mapbox.streets', attribution: mbAttr });
+    const grayscale = L.tileLayer(mbUrl, { id: 'mapbox/light-v10', attribution: mbAttr }),
+        satellite = L.tileLayer(mbUrl, { id: 'mapbox/satellite-v9', attribution: mbAttr }),
+        streets = L.tileLayer(mbUrl, { id: 'mapbox/streets-v11', attribution: mbAttr });
 
     // [latitude, longitude] of WashU SOM
     const mapCenter =  App.params.map?.center ?? [38.637587, -90.262347];
@@ -70,7 +70,7 @@ function initializeMap() {
     // setup map
     App.map = L.map('map', {
         center: mapCenter,
-        zoom: App.params.map?.zoom ?? 7,
+        zoom: App.params.map?.zoom ?? 11,
         layers: [grayscale],
         zoomControl: false
     });
