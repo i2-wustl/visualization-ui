@@ -98,8 +98,8 @@ class ContoursOverlay {
             // Choose parameters for computing the contours based on the zoom.
             // These are magic numbers empirically chosen to balance usefulness, aesthetics, and performance.
             // Maybe you can do better, but is it really worth your time?
-            let cellSize = App.map.getZoom() > 11 ? Math.pow(2, App.map.getZoom() - 10) : 2;
-            let bandwidth = App.map.getZoom() > 11 ? Math.pow(2, App.map.getZoom() - 10) : 4;
+            let cellSize = App.map.getZoom() > 15 ? Math.pow(2, App.map.getZoom() - 14) : 2;
+            let bandwidth = App.map.getZoom() > 15 ? Math.pow(2, App.map.getZoom() - 14) : 4;
 
             // Compute the density data
             let densityData = density()
