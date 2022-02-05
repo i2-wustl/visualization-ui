@@ -1,0 +1,30 @@
+{
+  "name": "covid19-visualization",
+  "version": "0.0.1",
+  "description": "[Insert project description here]",
+  "main": "index.js",
+  "scripts": {
+    "start": "live-server --open=index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/i2-wustl/visualization-ui.git"
+  },
+  "keywords": [
+    "covid19",
+    "pandemic",
+    "wustl",
+    "i2",
+    "wustl-i2",
+    "i2-wustl"
+  ],
+  "author": "I2 @ WUSTL",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/i2-wustl/visualization-ui/issues"
+  },
+  "homepage": "https://github.com/i2-wustl/visualization-ui#readme",
+  "devDependencies": {
+    "live-server": "^1.2.1"
+  }
+}

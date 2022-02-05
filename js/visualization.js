@@ -65,12 +65,12 @@ function initializeMap() {
         streets = L.tileLayer(mbUrl, { id: 'mapbox/streets-v11', attribution: mbAttr });
 
     // [latitude, longitude] of WashU SOM
-    const mapCenter = [38.637587, -90.262347];
+    const mapCenter =  App.params.map?.center ?? [38.637587, -90.262347];
 
     // setup map
     App.map = L.map('map', {
         center: mapCenter,
-        zoom: 11,
+        zoom: App.params.map?.zoom ?? 11,
         layers: [grayscale],
         zoomControl: false
     });
