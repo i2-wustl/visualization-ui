@@ -571,6 +571,7 @@ input[type="checkbox"] {
 /********************************************************************************/
 
 #chart-sidebar {
+  overflow-x: hidden;
   height: 100%;
   width: 0;
   position: fixed;
