@@ -1,6 +1,6 @@
 # Pandemic Tracker
 
-[Insert project description here]
+This is an interactive street-level visualization which shows new cases developing over time and resolving after a user defined number of days post-infection. We expect this tool to prove useful to public health departments as they navigate not only COVID-19 pandemic outcomes but also other public health threats including chronic diseases and communicable disease outbreaks.
 
 ## Deployment
 
